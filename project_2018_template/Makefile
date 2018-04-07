@@ -3,11 +3,14 @@ CFLAGS=-W -Wall -ansi -pedantic
 LDFLAGS=
 EXEC=hello
 
+$(EXEC):
+				  cd libfractal && ${MAKE}
+
 fractal: main.o fractal.o
-	$(CC) -o fractal fractal.o ain.o $(LDFLAGS)
+	$(CC) -o fractal fractal.o main.o $(LDFLAGS)
 
 fractal.o:
-						@(cd $(libfractal) && $(MAKE) $@)
+						cd libfractal && ${MAKE}
 
 main.o: main.c fractal.o
 	$(CC) -o main.o -c main.c $(CFLAGS)
