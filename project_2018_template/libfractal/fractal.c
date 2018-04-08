@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #include "fractal.h"
 
 struct fractal *fractal_new(const char *name, int width, int height, double a, double b)
@@ -11,15 +13,13 @@ struct fractal *fractal_new(const char *name, int width, int height, double a, d
     if(frac->name == NULL){
       return NULL;
     }
-    char* strcpy(frac->name, name);
+    strcpy(frac->name, name);
     frac->width = width;
     frac->height = height;
     frac->a = a;
     frac->b = b;
-    frac->valeur = (char *)malloc(sizeof(int)*width*height);
-    if(frac->valeur == NULL){
-      return NULL;
-    }
+    int tabValeur [width][height];
+    frac->valeur = tabValeur;
     return frac;
 }
 

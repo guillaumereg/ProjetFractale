@@ -8,7 +8,7 @@ struct fractal {
     int height;
     int width;
     double average;
-    int valeur [][] ;
+    int **valeur;
 };
 
 /*
