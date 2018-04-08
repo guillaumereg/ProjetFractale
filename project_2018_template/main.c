@@ -1,26 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include "fractal.h"
 
-#define TAILLE_MAX 1000 // Tableau de taille 1000
+#define TAILLE_MAX 1000 /* Tableau de taille 1000 */
 
 int main(int argc, char *argv[])
 {
-  //options de bases
+  /*options de bases */
   int plusieursFichiers = 0;
   int maxThreads = 1;
   int entree = 0;
   char * fichierSortie;
   int i=1;
 
-  //vérifications nombres arguments de bases
+  /*vérifications nombres arguments de bases*/
   if (argc < 3) {
     printf("Trop petit nombre d'arguments\n");
     exit(EXIT_FAILURE);
   }
 
-  //vérifications nombres arguments si option -d activée en premier
+  /*vérifications nombres arguments si option -d activée en premier*/
   if (strcmp(argv[1], "-d")==0){
     i++;
     if(argc<3){
@@ -28,7 +29,7 @@ int main(int argc, char *argv[])
       exit(EXIT_FAILURE);
     }
     plusieursFichiers = 1;
-    //vérifications nombres arguments si option -maxthreads activée en plus de l'option -d
+    /*vérifications nombres arguments si option -maxthreads activée en plus de l'option -d*/
     if (strcmp(argv[2], "--maxthreads")==0){
       i=i+2;
       if(argc<5){
@@ -38,7 +39,7 @@ int main(int argc, char *argv[])
       maxThreads = atoi(argv[3]);
     }
   }
-  //vérifications nombres arguments si  option -maxthreads activée en premier
+  /*vérifications nombres arguments si  option -maxthreads activée en premier*/
   else if (strcmp(argv[1], "--maxthreads")==0){
       i=i+2;
       if(argc<5){
@@ -46,7 +47,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
       }
       maxThreads = atoi(argv[2]);
-      //vérifications nombres arguments si option -d activée en plus de l'option -maxthreads
+      /*vérifications nombres arguments si option -d activée en plus de l'option -maxthreads*/
       if (strcmp(argv[2], "--maxthreads")==0){
         i++;
         if(argc<5){
@@ -57,16 +58,16 @@ int main(int argc, char *argv[])
       }
   }
 
-  //Y a t'il un fichier de sortie?
+  /*Y a t'il un fichier de sortie?*/
   int restant = 0;
   if (plusieursFichiers == 0){
     fichierSortie = argv[argc-1];
     restant = 1;
   }
 
-  //Lecture des fractales
+  /*Lecture des fractales*/
   while (i<argc-restant){
-    //Lecture des fractales sur l'entrée standart
+    /*Lecture des fractales sur l'entrée standart*/
     if (strcmp(argv[i], "-")==0){
       if(entree == 1){
         printf("Plusieurs fois l'arguments pour lire les entrées\n");
@@ -74,7 +75,7 @@ int main(int argc, char *argv[])
       }
       entree = 1;
     }
-    //Lecture des fractales dans des fichiers
+    /*Lecture des fractales dans des fichiers*/
     else {
       FILE * fichier = NULL;
       fichier = fopen(argv[i], "r");
@@ -83,7 +84,8 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
       }
 
-      while(fgets(chaine, TAILLE_MAX, fichier)!=NULL{
+      char * chaine;
+      while(fgets(chaine, TAILLE_MAX, fichier)!=NULL){
         char *result = NULL;
         result = strtok(chaine, " ");
 
@@ -110,6 +112,5 @@ int main(int argc, char *argv[])
       }
     }
   }
-
   return EXIT_SUCCESS;
 }
