@@ -62,7 +62,24 @@ int main(int argc, char *argv[])
   }
 
   while (i<argc-restant){
-    i++;
+    if (strcmp(argv[i], "-")==0){
+      if(entree == 1){
+        printf("Plusieurs fois l'arguments pour lire les entrées\n");
+        exit(EXIT_FAILURE);
+      }
+      entree = 1;
+    }
+    else {
+      FILE * fichier = NULL;
+      fichier = fopen(argv[i], "r");
+      if (fichier == NULL){
+        printf("Nom de fichier invalide : %s \n" , argv[i]);
+        exit(EXIT_FAILURE);
+      }
+      else{
+        fclose(fichier);
+      }
+    }
   }
   return EXIT_SUCCESS;
 
