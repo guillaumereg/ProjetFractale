@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include "fractal.h"
 
+#define TAILLE_MAX 1000 // Tableau de taille 1000
+
 int main(int argc, char *argv[])
 {
   //options de bases
@@ -55,13 +57,16 @@ int main(int argc, char *argv[])
       }
   }
 
+  //Y a t'il un fichier de sortie?
   int restant = 0;
   if (plusieursFichiers == 0){
     fichierSortie = argv[argc-1];
     restant = 1;
   }
 
+  //Lecture des fractales
   while (i<argc-restant){
+    //Lecture des fractales sur l'entrée standart
     if (strcmp(argv[i], "-")==0){
       if(entree == 1){
         printf("Plusieurs fois l'arguments pour lire les entrées\n");
@@ -69,6 +74,7 @@ int main(int argc, char *argv[])
       }
       entree = 1;
     }
+    //Lecture des fractales dans des fichiers
     else {
       FILE * fichier = NULL;
       fichier = fopen(argv[i], "r");
@@ -76,11 +82,34 @@ int main(int argc, char *argv[])
         printf("Nom de fichier invalide : %s \n" , argv[i]);
         exit(EXIT_FAILURE);
       }
-      else{
+
+      while(fgets(chaine, TAILLE_MAX, fichier)!=NULL{
+        char *result = NULL;
+        result = strtok(chaine, " ");
+
+        char tableChaine [5];
+        int j=0;
+        while (result != NULL){
+           strcpy(tableChaine[i], result);
+           i++;
+           result = strtok( NULL, " ");
+        }
+        if (tableChaine[0] != '#'){
+          if (tableChaine[4] == NULL){
+            printf("format de fractale invalide : %s \n" , argv[i]);
+            exit(EXIT_FAILURE);
+          }
+          char * name = tableChaine[0];
+          int width = tableChaine[1];
+          int height = tableChaine[2];
+          double a = tableChaine[3];
+          double b = tableChaine[4];
+          struct fractal * fracActu = fractal_new(name,width,height,a,b);
+        }
         fclose(fichier);
       }
     }
   }
-  return EXIT_SUCCESS;
 
+  return EXIT_SUCCESS;
 }
