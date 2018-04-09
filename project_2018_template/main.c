@@ -2,17 +2,37 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <pthread.h>
 #include "libfractal/fractal.h"
 
 #define TAILLE_MAX 1000 /* Tableau de taille 1000 */
+
+char * filename;
+char * fichierSortie;
+
 struct fractal tabFractal[4];
+int tableauRempli = 0;
+
+struct fractal tabFractalCalculee[4];
+int fractaleCalculee = 0;
+
+
+pthread_cond_t condStockage = PTHREAD_COND_INITIALIZER; /* Création de la condition */
+pthread_cond_t condCalcul = PTHREAD_COND_INITIALIZER; /* Création de la condition */
+
+pthread_mutex_t mutexLecture = PTHREAD_MUTEX_INITIALIZER; /* Création du mutex */
+pthread_mutex_t mutexCalcul = PTHREAD_MUTEX_INITIALIZER; /* Création du mutex */
+
+
+void* threadLecteur (void* arg);
+void* threadCalculateur (void* arg);
+void* threadEcrivain (void* arg);
 
 int main(int argc, char *argv[]){
   /*options de bases */
   int plusieursFichiers = 0;
   int maxThreads = 1;
   int entree = 0;
-  char * fichierSortie;
   int i=1;
 
   /*vérifications nombres arguments de bases*/
@@ -75,12 +95,22 @@ int main(int argc, char *argv[]){
       }
       entree = 1;
     }
-    lecturefichier(argv[i]);
+    filename = argv[i];
+
+    printf("gérer le fait qu'il y a un nombre inconnu de thread");
+
+    pthread_t monThreadLecteur;
+    pthread_t monThreadCalculateur;
+    pthread_t monThreadEcrivain;
+
+    pthread_create (&monThreadLecteur, NULL, threadLecteur, (void *)NULL);
+    pthread_create (&monThreadCalculateur, NULL, threadCalculateur, (void *)NULL);
+    pthread_create (&monThreadEcrivain, NULL, threadEcrivain, (void *)NULL);
   }
   return EXIT_SUCCESS;
 }
 
-void lecturefichier(char * filename){
+void *threadLecteur(void* arg){
 
   if(strcmp(filename,"-") == 0){
     printf("à coder");
@@ -116,9 +146,34 @@ void lecturefichier(char * filename){
         double a = atoi(tableChaine[3]);
         double b = atoi(tableChaine[4]);
         struct fractal * fracActu = fractal_new(name,width,height,a,b);
+        /*
+        if (tableauRempli == 4){
+          pthread_mutex_lock (&mutexLecture);
+			    pthread_cond_signal (&condStockage);
+			    pthread_mutex_unlock (&mutexLecture);
+
+          int a = 0;
+          while(a<4 && tabFractal[a]!=NULL){
+            a++;
+          }
+          tabFractal[a] = fracActu;
+        }
+        tableauRempli++;
+        */
       }
       fgets(chaine, TAILLE_MAX, fichier);
     }
     fclose(fichier);
   }
+  pthread_exit(NULL); /* Fin du thread */
+}
+
+void * threadCalculateur(void* arg){
+  printf("à faire");
+  pthread_exit(NULL); /* Fin du thread */
+}
+
+void * threadEcrivain(void* arg){
+  printf("à faire");
+  pthread_exit(NULL); /* Fin du thread */
 }
