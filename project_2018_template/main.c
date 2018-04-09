@@ -5,10 +5,13 @@
 #include <pthread.h>
 #include "libfractal/fractal.h"
 
+
 #define TAILLE_MAX 1000 /* Tableau de taille 1000 */
 
 char * filename;
 char * fichierSortie;
+int plusieursFichiers = 0;
+double plusGrandeMoyenne = 0;
 
 struct fractal tabFractal[4];
 int tableauRempli = 0;
@@ -29,8 +32,8 @@ void* threadCalculateur (void* arg);
 void* threadEcrivain (void* arg);
 
 int main(int argc, char *argv[]){
+
   /*options de bases */
-  int plusieursFichiers = 0;
   int maxThreads = 1;
   int entree = 0;
   int i=1;
@@ -160,6 +163,8 @@ void *threadLecteur(void* arg){
         }
         tableauRempli++;
         */
+        printf (" bref faut un truc qui marche qui permet d'écrire les fractales dans un tableau tout en attendant quand le tableau est rempli");
+        printf (" et écrire dès qu'une place ce libère ");
       }
       fgets(chaine, TAILLE_MAX, fichier);
     }
@@ -169,11 +174,35 @@ void *threadLecteur(void* arg){
 }
 
 void * threadCalculateur(void* arg){
-  printf("à faire");
+  /*
+  int a = 0;
+  while(a<4 && tabFractal[a]!=NULL){
+    a++;
+  }
+  */
+  printf (" bref dès que le thread est libre et qu'il y a une fractale dans le tableau, copier la fractale et la supprimer du tableau");
+  struct fractal * fracActu ;
+  double moyenne;
+  int i;
+  for(i=0;i<fracActu->height;i++){
+    int j;
+    for(j=0;j<fracActu->width;j++){
+      int val = fractal_compute_value(fracActu, i, j);
+      moyenne += val;
+      fractal_set_value(fracActu, i, j, val);
+    }
+  }
+  moyenne = moyenne/(fracActu->height*fracActu->width);
+  if (moyenne > plusGrandeMoyenne){
+    plusGrandeMoyenne = moyenne;
+    printf("Sauvegarder la fractale avec la plus grande moyenne");
+  }
+  printf (" bref faut un truc qui marche qui permet d'écrire les fractales calculée dans un 2ème tableau tout en attendant quand le tableau est rempli ");
+  printf (" et écrire dès qu'une place ce libère ");
   pthread_exit(NULL); /* Fin du thread */
 }
 
 void * threadEcrivain(void* arg){
-  printf("à faire");
+  printf("choper les fractales calcluées dans le deuxième tableau et les écrire dans un/des fichiers ");
   pthread_exit(NULL); /* Fin du thread */
 }
