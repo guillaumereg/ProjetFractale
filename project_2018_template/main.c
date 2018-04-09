@@ -5,6 +5,7 @@
 #include "libfractal/fractal.h"
 
 #define TAILLE_MAX 1000 /* Tableau de taille 1000 */
+struct fractal tabFractal[4];
 
 int main(int argc, char *argv[]){
   /*options de bases */
@@ -73,17 +74,13 @@ int main(int argc, char *argv[]){
         exit(EXIT_FAILURE);
       }
       entree = 1;
-      lecture("-");
     }
-    /*Lecture des fractales dans des fichiers*/
-    else {
-      lecture(argv[i]);
-    }
+    lecturefichier(argv[i]);
   }
   return EXIT_SUCCESS;
 }
 
-void lecture(char * filename){
+void lecturefichier(char * filename){
 
   if(strcmp(filename,"-") == 0){
     printf("à coder");
@@ -96,33 +93,32 @@ void lecture(char * filename){
     }
 
     char * chaine;
-    while(fgets(chaine, TAILLE_MAX, fichier)!=NULL){
+    fgets(chaine, TAILLE_MAX, fichier);
+    while(chaine!=NULL){
       char *result = NULL;
       result = strtok(chaine, " ");
 
-      char tableChaine [5];
+      char * tableChaine [5];
       int i=0;
       while (result != NULL){
          strcpy(tableChaine[i], result);
          i++;
          result = strtok( NULL, " ");
       }
-      if (tableChaine[0] != '#'){
+      if (strcmp(tableChaine[0] , "#")!=0){
         if (i!=5){
           printf("format de fractale invalide : %s \n" , filename);
           exit(EXIT_FAILURE);
         }
         char * name = tableChaine[0];
-        int width = tableChaine[1];
-        int height = tableChaine[2];
-        double a = tableChaine[3];
-        double b = tableChaine[4];
+        int width = atoi(tableChaine[1]);
+        int height = atoi(tableChaine[2]);
+        double a = atoi(tableChaine[3]);
+        double b = atoi(tableChaine[4]);
         struct fractal * fracActu = fractal_new(name,width,height,a,b);
       }
-      fclose(fichier);
+      fgets(chaine, TAILLE_MAX, fichier);
     }
+    fclose(fichier);
   }
-
-
-
 }
