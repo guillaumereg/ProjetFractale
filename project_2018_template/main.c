@@ -13,10 +13,10 @@ char * fichierSortie;
 int plusieursFichiers = 0;
 double plusGrandeMoyenne = 0;
 
-struct fractal tabFractal[4];
+struct fractal * tabFractal[4];
 int tableauRempli = 0;
 
-struct fractal tabFractalCalculee[4];
+struct fractal * tabFractalCalculee[4];
 int fractaleCalculee = 0;
 
 
@@ -149,7 +149,7 @@ void *threadLecteur(void* arg){
         double a = atoi(tableChaine[3]);
         double b = atoi(tableChaine[4]);
         struct fractal * fracActu = fractal_new(name,width,height,a,b);
-        /*
+
         if (tableauRempli == 4){
           pthread_mutex_lock (&mutexLecture);
 			    pthread_cond_signal (&condStockage);
@@ -162,9 +162,9 @@ void *threadLecteur(void* arg){
           tabFractal[a] = fracActu;
         }
         tableauRempli++;
-        */
+
         printf (" bref faut un truc qui marche qui permet d'écrire les fractales dans un tableau tout en attendant quand le tableau est rempli");
-        printf (" et écrire dès qu'une place ce libère ");
+        printf (" et écrire dès qu'une place se libère ");
       }
       fgets(chaine, TAILLE_MAX, fichier);
     }
@@ -174,12 +174,12 @@ void *threadLecteur(void* arg){
 }
 
 void * threadCalculateur(void* arg){
-  /*
+
   int a = 0;
   while(a<4 && tabFractal[a]!=NULL){
     a++;
   }
-  */
+
   printf (" bref dès que le thread est libre et qu'il y a une fractale dans le tableau, copier la fractale et la supprimer du tableau");
   struct fractal * fracActu ;
   double moyenne;
