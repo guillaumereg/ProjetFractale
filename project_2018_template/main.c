@@ -8,22 +8,23 @@
 
 #define TAILLE_MAX 1000 /* Tableau de taille 1000 */
 
-char * filename;
-char * fichierSortie;
-int plusieursFichiers = 0;
-double plusGrandeMoyenne = 0;
+char * filename; /* fichier d'entrée qu'on lit actuellement */
+char * fichierSortie; /* fichier de sortie */
+int plusieursFichiers = 0; /* pour savoir il s'il faut un fichier pour chaque fractale */
 
-struct fractal * tabFractal[4];
-int tableauRempli = 0;
+double plusGrandeMoyenne = 0; /* stocke la plus grande moyenne de fractale actuelle */
+struct fractal * fracMax; /* pointeur vers la fractale avec la plus grande moyenne */
 
-struct fractal * tabFractalCalculee[4];
-int fractaleCalculee = 0;
+struct fractal * tabFractal[4]; /* tableau de fractales non calculées */
+int tableauRempli = 0; /* permet d'indiquer s'il reste de la place dans le tableau */
 
+struct fractal * tabFractalCalculee[4]; /* tableau de fractales calculées */
+int fractaleCalculee = 0; /* permet d'indiquer s'il reste de la place dans le tableau */
 
 pthread_cond_t condStockage = PTHREAD_COND_INITIALIZER; /* Création de la condition */
-pthread_cond_t condCalcul = PTHREAD_COND_INITIALIZER; /* Création de la condition */
-
 pthread_mutex_t mutexLecture = PTHREAD_MUTEX_INITIALIZER; /* Création du mutex */
+
+pthread_cond_t condCalcul = PTHREAD_COND_INITIALIZER; /* Création de la condition */
 pthread_mutex_t mutexCalcul = PTHREAD_MUTEX_INITIALIZER; /* Création du mutex */
 
 
@@ -152,7 +153,7 @@ void *threadLecteur(void* arg){
 
         if (tableauRempli == 4){
           pthread_mutex_lock (&mutexLecture);
-			    pthread_cond_signal (&condStockage);
+			    pthread_cond_wait (&condStockage, &mutexLecture);
 			    pthread_mutex_unlock (&mutexLecture);
 
           int a = 0;
@@ -163,8 +164,6 @@ void *threadLecteur(void* arg){
         }
         tableauRempli++;
 
-        printf (" bref faut un truc qui marche qui permet d'écrire les fractales dans un tableau tout en attendant quand le tableau est rempli");
-        printf (" et écrire dès qu'une place se libère ");
       }
       fgets(chaine, TAILLE_MAX, fichier);
     }
@@ -179,9 +178,12 @@ void * threadCalculateur(void* arg){
   while(a<4 && tabFractal[a]!=NULL){
     a++;
   }
-
-  printf (" bref dès que le thread est libre et qu'il y a une fractale dans le tableau, copier la fractale et la supprimer du tableau");
-  struct fractal * fracActu ;
+  struct fractal * fracActu = tabFractal[a];
+  tabFractal[a] = NULL;
+  tableauRempli --;
+  pthread_mutex_lock (&mutexLecture);
+	pthread_cond_signal (&condStockage);
+  pthread_mutex_unlock (&mutexLecture);
   double moyenne;
   int i;
   for(i=0;i<fracActu->height;i++){
@@ -194,10 +196,21 @@ void * threadCalculateur(void* arg){
   moyenne = moyenne/(fracActu->height*fracActu->width);
   if (moyenne > plusGrandeMoyenne){
     plusGrandeMoyenne = moyenne;
-    printf("Sauvegarder la fractale avec la plus grande moyenne");
+    fracMax = fracActu;
   }
-  printf (" bref faut un truc qui marche qui permet d'écrire les fractales calculée dans un 2ème tableau tout en attendant quand le tableau est rempli ");
-  printf (" et écrire dès qu'une place ce libère ");
+
+  if (fractaleCalculee == 4){
+    pthread_mutex_lock (&mutexCalcul);
+    pthread_cond_wait (&condCalcul, &mutexCalcul);
+    pthread_mutex_unlock (&mutexCalcul);
+
+    int a = 0;
+    while(a<4 && tabFractalCalculee[a]!=NULL){
+      a++;
+    }
+    tabFractalCalculee[a] = fracActu;
+  }
+  fractaleCalculee++;
   pthread_exit(NULL); /* Fin du thread */
 }
 
