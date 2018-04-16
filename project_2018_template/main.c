@@ -218,3 +218,43 @@ void * threadEcrivain(void* arg){
   printf("choper les fractales calcluées dans le deuxième tableau et les écrire dans un/des fichiers ");
   pthread_exit(NULL); /* Fin du thread */
 }
+
+typedef struct {
+    int *buf;          /* Buffer partagé */
+    int n;             /* Nombre de slots dans le buffer */
+    int front;         /* buf[(front+1)%n] est le premier élément */
+    int rear;          /* buf[rear%n] est le dernier */
+    sem_t mutex;       /* Protège l'accès au buffer */
+    sem_t slots;       /* Nombre de places libres */
+    sem_t items;       /* Nombre d'items dans le buffer */
+} sbuf_t;
+
+void sbuf_init(sbuf_t *sp, int n){
+    sp->buf = calloc(n, sizeof(int));
+    sp->n = n;                       /* Buffer content les entiers */
+    sp->front = sp->rear = 0;        /* Buffer vide si front == rear */
+    sem_init(&sp->mutex, 0, 1);      /* Exclusion mutuelle */
+    sem_init(&sp->slots, 0, n);      /* Au début, n slots vides */
+    sem_init(&sp->items, 0, 0);      /* Au début, rien à consommer */
+}
+
+void sbuf_clean(sbuf_t *sp){
+    free(sp->buf);
+}
+
+void sbuf_insert(sbuf_t *sp, int item){
+    sem_wait(&sp->slots);
+    sem_wait(&sp->mutex);
+    sp->rear++;
+    sp->rear=item;
+    sem_post(&sp->mutex);
+    sem_post(&sp->items);
+}
+
+int sbuf_remove(sbuf_t *sp){
+    sem_wait(&sp->items);
+    sem_wait(&sp->mutex);
+    sp->front++;
+    sem_post(&sp->mutex);
+    sem_post(&sp->slots);
+}
