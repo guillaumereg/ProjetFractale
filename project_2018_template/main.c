@@ -189,7 +189,6 @@ void * threadCalculateur(void* arg){
     for(j=0;j<fracActu->width;j++){
       int val = fractal_compute_value(fracActu, i, j);
       moyenne += val;
-      fractal_set_value(fracActu, i, j, val);
     }
   }
   moyenne = moyenne/(fracActu->height*fracActu->width);
