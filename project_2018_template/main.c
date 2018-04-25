@@ -215,7 +215,7 @@ void * threadCalculateur(void* arg){
 }
 
 void * threadEcrivain(void* arg){
-  printf("choper les fractales calcluées dans le deuxième tableau et les écrire dans un/des fichiers ");
+  printf("choper les fractales calculées dans le deuxième tableau et les écrire dans un/des fichiers ");
   pthread_exit(NULL); /* Fin du thread */
 }
 
@@ -246,15 +246,21 @@ void sbuf_insert(sbuf_t *sp, int item){
     sem_wait(&sp->slots);
     sem_wait(&sp->mutex);
     sp->rear++;
-    sp->rear=item;
+    sp->rear=(sp->rear)%(sp->n);
+    *(sp->buf+(sp->rear))=item;
     sem_post(&sp->mutex);
     sem_post(&sp->items);
 }
 
 int sbuf_remove(sbuf_t *sp){
+    int x;
     sem_wait(&sp->items);
     sem_wait(&sp->mutex);
     sp->front++;
+    sp->front=(sp->front)%(sp->n);
+    x=*(sp->buf+(sp->front));
+    *(sp->buf+(sp->front))=0;
     sem_post(&sp->mutex);
     sem_post(&sp->slots);
+    return x;
 }
