@@ -22,13 +22,6 @@ pthread_mutex_t mutexLecture = PTHREAD_MUTEX_INITIALIZER; /* Création du mutex 
 pthread_cond_t condCalcul = PTHREAD_COND_INITIALIZER; /* Création de la condition */
 pthread_mutex_t mutexCalcul = PTHREAD_MUTEX_INITIALIZER; /* Création du mutex */
 
-sem_t empty_1;
-sem_t full_1;
-
-sem_t empty_2;
-sem_t full_2;
-
-
 void* threadLecteur (void* arg);
 void* threadCalculateur (void* arg);
 void* threadEcrivain (void* arg);
@@ -271,31 +264,4 @@ int sbuf_remove(sbuf_t *sp){
     sem_post(&sp->mutex);
     sem_post(&sp->slots);
     return x;
-}
-
-/* Fonction producteur */
-void producer(){
-  int a;
-  while(true){
-    a=produce(a);
-    sem_wait(&empty);
-    pthread_mutex_lock(&mutex);
-    /* section critique */
-    insert_item();
-    pthread_mutex_unlock(&mutex);
-    sem_post(&full);
-  }
-}
-
-/* Fonction consommateur */
-void consumer(void){
-  int a;
-  while(true){
-    sem_wait(&full);
-    pthread_mutex_lock(&mutex);
-    /* section critique */
-    a=remove(a);
-    pthread_mutex_unlock(&mutex);
-    sem_post(&empty);
-  }
 }
