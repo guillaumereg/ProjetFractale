@@ -157,7 +157,7 @@ void *threadLecteur(void* arg){
       exit(EXIT_FAILURE);
     }
 
-    char * chaine;
+    char * chaine = NULL;
     fgets(chaine, TAILLE_MAX, fichier);
     while(chaine!=NULL){
       char *result = NULL;
@@ -202,14 +202,14 @@ void * threadCalculateur(void* arg){
 
   double moyenne;
   int i;
-  for(i=0;i<fracActu->height;i++){
+  for(i=0;i<fractal_get_height(fracActu);i++){
     int j;
-    for(j=0;j<fracActu->width;j++){
+    for(j=0;j<fractal_get_width(fracActu);j++){
       int val = fractal_compute_value(fracActu, i, j);
       moyenne += val;
     }
   }
-  moyenne = moyenne/(fracActu->height*fracActu->width);
+  moyenne = moyenne/(fractal_get_height(fracActu)*fractal_get_width(fracActu));
   if (moyenne > plusGrandeMoyenne){
     plusGrandeMoyenne = moyenne;
     fracMax = fracActu;
@@ -227,15 +227,15 @@ void * threadCalculateur(void* arg){
 void * threadEcrivain(void* arg){
 
   struct fractal * fracActu = sbuf_remove(buffer_calculateur_ecrivain);
-  FILE * fichier = NULL;
+  char * fichier = NULL;
 
   if (plusieursFichiers == 0){
 
-    fichier = fopen(fichierSortie, "w");
+    fichier = fichierSortie;
 
   }else {
 
-    fichier = fopen(fracActu->name, "w");
+    fichier = fracActu->name;
 
   }
 
@@ -243,10 +243,9 @@ void * threadEcrivain(void* arg){
     printf("Erreur dans le fichier de sortie \n");
     exit(EXIT_FAILURE);
   }
-  
+
   write_bitmap_sdl(fracActu, fichier);
 
-  fclose(fichier);
   pthread_exit(NULL); /* Fin du thread */
 }
 
