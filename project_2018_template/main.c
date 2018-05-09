@@ -197,26 +197,33 @@ void *threadLecteur(void* arg){
 /* Fonction pour calculer les fractales */
 void * threadCalculateur(void* arg){
 
+  int bool = 0;
 
-  struct fractal * fracActu = sbuf_remove(buffer_lecteur_calculateur);
+  while (bool == 0){
 
-  double moyenne;
-  int i;
-  for(i=0;i<fractal_get_height(fracActu);i++){
-    int j;
-    for(j=0;j<fractal_get_width(fracActu);j++){
-      int val = fractal_compute_value(fracActu, i, j);
-      moyenne += val;
+    struct fractal * fracActu = sbuf_remove(buffer_lecteur_calculateur);
+    if (fracActu == NULL){
+      bool = 1;
+      pthread_exit(NULL); /* Fin du thread */
     }
-  }
-  moyenne = moyenne/(fractal_get_height(fracActu)*fractal_get_width(fracActu));
-  if (moyenne > plusGrandeMoyenne){
-    plusGrandeMoyenne = moyenne;
-    fracMax = fracActu;
-  }
 
-  sbuf_insert(buffer_calculateur_ecrivain, fracActu);
+    double moyenne;
+    int i;
+    for(i=0;i<fractal_get_height(fracActu);i++){
+      int j;
+      for(j=0;j<fractal_get_width(fracActu);j++){
+        int val = fractal_compute_value(fracActu, i, j);
+        moyenne += val;
+      }
+    }
+    moyenne = moyenne/(fractal_get_height(fracActu)*fractal_get_width(fracActu));
+    if (moyenne > plusGrandeMoyenne){
+      plusGrandeMoyenne = moyenne;
+      fracMax = fracActu;
+    }
 
+    sbuf_insert(buffer_calculateur_ecrivain, fracActu);
+  }
   pthread_exit(NULL); /* Fin du thread */
 }
 
@@ -226,25 +233,35 @@ void * threadCalculateur(void* arg){
 /* Fonction pour écrire les fractales */
 void * threadEcrivain(void* arg){
 
-  struct fractal * fracActu = sbuf_remove(buffer_calculateur_ecrivain);
-  char * fichier = NULL;
+  int bool = 0;
 
-  if (plusieursFichiers == 0){
+  while (bool == 0){
 
-    fichier = fichierSortie;
 
-  }else {
+    struct fractal * fracActu = sbuf_remove(buffer_calculateur_ecrivain);
+    if (fracActu == NULL){
+      bool = 1;
+      pthread_exit(NULL); /* Fin du thread */
+    }
+    char * fichier = NULL;
 
-    fichier = fracActu->name;
+    if (plusieursFichiers == 0){
 
+      fichier = fichierSortie;
+
+    }else {
+
+      fichier = fracActu->name;
+
+    }
+
+    if (fichier == NULL){
+      printf("Erreur dans le fichier de sortie \n");
+      exit(EXIT_FAILURE);
+    }
+
+    write_bitmap_sdl(fracActu, fichier);
   }
-
-  if (fichier == NULL){
-    printf("Erreur dans le fichier de sortie \n");
-    exit(EXIT_FAILURE);
-  }
-
-  write_bitmap_sdl(fracActu, fichier);
 
   pthread_exit(NULL); /* Fin du thread */
 }
