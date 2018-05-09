@@ -8,6 +8,7 @@
 
 
 #define TAILLE_MAX 1000 /* Tableau de taille 1000 */
+int SIZE_FRACTALE = sizeof(struct fractal);
 
 char * filename; /* fichier d'entrée qu'on lit actuellement */
 char * fichierSortie; /* fichier de sortie */
@@ -16,11 +17,8 @@ int plusieursFichiers = 0; /* pour savoir il s'il faut un fichier pour chaque fr
 double plusGrandeMoyenne = 0; /* stocke la plus grande moyenne de fractale actuelle */
 struct fractal * fracMax; /* pointeur vers la fractale avec la plus grande moyenne */
 
-pthread_cond_t condStockage = PTHREAD_COND_INITIALIZER; /* Création de la condition */
-pthread_mutex_t mutexLecture = PTHREAD_MUTEX_INITIALIZER; /* Création du mutex */
-
-pthread_cond_t condCalcul = PTHREAD_COND_INITIALIZER; /* Création de la condition */
-pthread_mutex_t mutexCalcul = PTHREAD_MUTEX_INITIALIZER; /* Création du mutex */
+struct sbuf_t * buffer_lecteur_calculateur;
+struct sbuf_t * buffer_calculateur_ecrivain;
 
 void* threadLecteur (void* arg);
 void* threadCalculateur (void* arg);
@@ -87,6 +85,7 @@ int main(int argc, char *argv[]){
 
   /*Lecture des fractales*/
   while (i<argc-restant){
+
     /*Lecture des fractales sur l'entrée standart*/
     if (strcmp(argv[i], "-")==0){
       if(entree == 1){
@@ -106,6 +105,11 @@ int main(int argc, char *argv[]){
     pthread_create (&monThreadLecteur, NULL, threadLecteur, (void *)NULL);
     pthread_create (&monThreadCalculateur, NULL, threadCalculateur, (void *)NULL);
     pthread_create (&monThreadEcrivain, NULL, threadEcrivain, (void *)NULL);
+
+    /*initialisation des buffer*/
+    sbuf_init(buffer_lecteur_calculateur,4);
+    sbuf_init(buffer_calculateur_ecrivain,4);
+
   }
   return EXIT_SUCCESS;
 }
@@ -115,8 +119,10 @@ int main(int argc, char *argv[]){
 void *threadLecteur(void* arg){
 
   if(strcmp(filename,"-") == 0){
-    printf("à coder");
-  }else {
+
+    /* à coder */
+
+  } else {
     FILE * fichier = NULL;
     fichier = fopen(filename, "r");
     if (fichier == NULL){
@@ -150,7 +156,7 @@ void *threadLecteur(void* arg){
         struct fractal * fracActu = fractal_new(name,width,height,a,b);
 
 
-        /* Ici faut faire le truc pour le buffer */
+
 
 
 
@@ -222,8 +228,8 @@ typedef struct {
 
 /* Fonction pour initialiser un buffer */
 void sbuf_init(sbuf_t *sp, int n){
-    sp->buf = calloc(n, sizeof(int));
-    sp->n = n;                       /* Buffer content les entiers */
+    sp->buf = calloc(n, sizeof(struct fractal));
+    sp->n = n;
     sp->front = sp->rear = 0;        /* Buffer vide si front == rear */
     sem_init(&sp->mutex, 0, 1);      /* Exclusion mutuelle */
     sem_init(&sp->slots, 0, n);      /* Au début, n slots vides */
@@ -240,12 +246,12 @@ void sbuf_clean(sbuf_t *sp){
 
 
 /* Fonction pour insérer un nouvel élément dans un buffer */
-void sbuf_insert(sbuf_t *sp, int item){
+void sbuf_insert(sbuf_t *sp, struct fractal * fracActu){
     sem_wait(&sp->slots);
     sem_wait(&sp->mutex);
-    sp->rear++;
+    sp->rear= sp->rear++;
     sp->rear=(sp->rear)%(sp->n);
-    *(sp->buf+(sp->rear))=item;
+    *(sp->buf+(sp->rear)*SIZE_FRACTALE)=fracActu;
     sem_post(&sp->mutex);
     sem_post(&sp->items);
 }
@@ -254,14 +260,14 @@ void sbuf_insert(sbuf_t *sp, int item){
 
 /* Fonction pour retirer un élément du buffer */
 int sbuf_remove(sbuf_t *sp){
-    int x;
+    struct fractal * fracActu;
     sem_wait(&sp->items);
     sem_wait(&sp->mutex);
     sp->front++;
     sp->front=(sp->front)%(sp->n);
-    x=*(sp->buf+(sp->front));
+    fracActu=*(sp->buf+(sp->front)*SIZE_FRACTALE);
     *(sp->buf+(sp->front))=0;
     sem_post(&sp->mutex);
     sem_post(&sp->slots);
-    return x;
+    return fracActu;
 }
