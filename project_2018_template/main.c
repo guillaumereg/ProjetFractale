@@ -6,6 +6,17 @@
 #include <semaphore.h>
 #include "libfractal/fractal.h"
 
+/* Structure du buffer */
+typedef struct{
+    int *buf;          /* Buffer partagé */
+    int n;             /* Nombre de slots dans le buffer */
+    int front;         /* buf[(front+1)%n] est le premier élément */
+    int rear;          /* buf[rear%n] est le dernier */
+    sem_t mutex;       /* Protège l'accès au buffer */
+    sem_t slots;       /* Nombre de places libres */
+    sem_t items;       /* Nombre d'items dans le buffer */
+} sbuf_t;
+
 
 #define TAILLE_MAX 1000 /* Tableau de taille 1000 */
 int SIZE_FRACTALE = sizeof(struct fractal);
@@ -17,12 +28,27 @@ int plusieursFichiers = 0; /* pour savoir il s'il faut un fichier pour chaque fr
 double plusGrandeMoyenne = 0; /* stocke la plus grande moyenne de fractale actuelle */
 struct fractal * fracMax; /* pointeur vers la fractale avec la plus grande moyenne */
 
-struct sbuf_t * buffer_lecteur_calculateur;
-struct sbuf_t * buffer_calculateur_ecrivain;
+sbuf_t * buffer_lecteur_calculateur;
+sbuf_t * buffer_calculateur_ecrivain;
 
+/* Prototype fonction pour lire des fichiers*/
 void* threadLecteur (void* arg);
+/* Prototype fonction pour calculer des fractales*/
 void* threadCalculateur (void* arg);
+/* Prototype fonction pour écrire dans des fichiers*/
 void* threadEcrivain (void* arg);
+
+
+/* Prototype fonction pour initialiser un buffer */
+void sbuf_init(sbuf_t *sp, int n);
+/* Prototype fonction pour libérer un buffer */
+void sbuf_clean(sbuf_t *sp);
+/* Prototype fonction pour insérer un nouvel élément dans un buffer */
+void sbuf_insert(sbuf_t *sp, struct fractal * fracActu);
+/* Prototype fonction pour retirer un élément du buffer */
+struct fractal * sbuf_remove(sbuf_t *sp);
+
+
 
 
 /*méthode main */
@@ -204,20 +230,6 @@ void * threadEcrivain(void* arg){
 }
 
 
-
-/* Structure du buffer */
-typedef struct {
-    int *buf;          /* Buffer partagé */
-    int n;             /* Nombre de slots dans le buffer */
-    int front;         /* buf[(front+1)%n] est le premier élément */
-    int rear;          /* buf[rear%n] est le dernier */
-    sem_t mutex;       /* Protège l'accès au buffer */
-    sem_t slots;       /* Nombre de places libres */
-    sem_t items;       /* Nombre d'items dans le buffer */
-} sbuf_t;
-
-
-
 /* Fonction pour initialiser un buffer */
 void sbuf_init(sbuf_t *sp, int n){
     sp->buf = calloc(n, sizeof(struct fractal));
@@ -241,7 +253,7 @@ void sbuf_clean(sbuf_t *sp){
 void sbuf_insert(sbuf_t *sp, struct fractal * fracActu){
     sem_wait(&sp->slots);
     sem_wait(&sp->mutex);
-    sp->rear= sp->rear++;
+    sp->rear++;
     sp->rear=(sp->rear)%(sp->n);
     *(sp->buf+(sp->rear)*SIZE_FRACTALE)=fracActu;
     sem_post(&sp->mutex);
@@ -251,7 +263,7 @@ void sbuf_insert(sbuf_t *sp, struct fractal * fracActu){
 
 
 /* Fonction pour retirer un élément du buffer */
-int sbuf_remove(sbuf_t *sp){
+struct fractal * sbuf_remove(sbuf_t *sp){
     struct fractal * fracActu;
     sem_wait(&sp->items);
     sem_wait(&sp->mutex);
