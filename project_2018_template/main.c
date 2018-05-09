@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <semaphore.h>
 #include "libfractal/fractal.h"
 
 
@@ -32,6 +33,8 @@ void* threadLecteur (void* arg);
 void* threadCalculateur (void* arg);
 void* threadEcrivain (void* arg);
 
+
+/*méthode main */
 int main(int argc, char *argv[]){
 
   /*options de bases */
@@ -114,6 +117,8 @@ int main(int argc, char *argv[]){
   return EXIT_SUCCESS;
 }
 
+
+/* Fonction pour lire les fichiers */
 void *threadLecteur(void* arg){
 
   if(strcmp(filename,"-") == 0){
@@ -151,18 +156,11 @@ void *threadLecteur(void* arg){
         double b = atoi(tableChaine[4]);
         struct fractal * fracActu = fractal_new(name,width,height,a,b);
 
-        if (tableauRempli == 4){
-          pthread_mutex_lock (&mutexLecture);
-			    pthread_cond_wait (&condStockage, &mutexLecture);
-			    pthread_mutex_unlock (&mutexLecture);
 
-          int a = 0;
-          while(a<4 && tabFractal[a]!=NULL){
-            a++;
-          }
-          tabFractal[a] = fracActu;
-        }
-        tableauRempli++;
+        /* Ici faut faire le truc pour le buffer */
+
+
+
 
       }
       fgets(chaine, TAILLE_MAX, fichier);
@@ -172,18 +170,17 @@ void *threadLecteur(void* arg){
   pthread_exit(NULL); /* Fin du thread */
 }
 
+
+
+/* Fonction pour calculer les fractales */
 void * threadCalculateur(void* arg){
 
-  int a = 0;
-  while(a<4 && tabFractal[a]!=NULL){
-    a++;
-  }
-  struct fractal * fracActu = tabFractal[a];
-  tabFractal[a] = NULL;
-  tableauRempli --;
-  pthread_mutex_lock (&mutexLecture);
-	pthread_cond_signal (&condStockage);
-  pthread_mutex_unlock (&mutexLecture);
+
+  struct fractal * fracActu ;
+
+/* Ici faut faire le truc pour le buffer */
+
+
   double moyenne;
   int i;
   for(i=0;i<fracActu->height;i++){
@@ -199,26 +196,25 @@ void * threadCalculateur(void* arg){
     fracMax = fracActu;
   }
 
-  if (fractaleCalculee == 4){
-    pthread_mutex_lock (&mutexCalcul);
-    pthread_cond_wait (&condCalcul, &mutexCalcul);
-    pthread_mutex_unlock (&mutexCalcul);
 
-    int a = 0;
-    while(a<4 && tabFractalCalculee[a]!=NULL){
-      a++;
-    }
-    tabFractalCalculee[a] = fracActu;
-  }
-  fractaleCalculee++;
+/* Ici faut faire un truc pour le buffer */
+
+
   pthread_exit(NULL); /* Fin du thread */
 }
 
+
+
+
+/* Fonction pour écrire les fractales */
 void * threadEcrivain(void* arg){
   printf("choper les fractales calculées dans le deuxième tableau et les écrire dans un/des fichiers ");
   pthread_exit(NULL); /* Fin du thread */
 }
 
+
+
+/* Structure du buffer */
 typedef struct {
     int *buf;          /* Buffer partagé */
     int n;             /* Nombre de slots dans le buffer */
@@ -229,6 +225,9 @@ typedef struct {
     sem_t items;       /* Nombre d'items dans le buffer */
 } sbuf_t;
 
+
+
+/* Fonction pour initialiser un buffer */
 void sbuf_init(sbuf_t *sp, int n){
     sp->buf = calloc(n, sizeof(int));
     sp->n = n;                       /* Buffer content les entiers */
@@ -238,10 +237,16 @@ void sbuf_init(sbuf_t *sp, int n){
     sem_init(&sp->items, 0, 0);      /* Au début, rien à consommer */
 }
 
+
+
+/* Fonction pour libérer un buffer */
 void sbuf_clean(sbuf_t *sp){
     free(sp->buf);
 }
 
+
+
+/* Fonction pour insérer un nouvel élément dans un buffer */
 void sbuf_insert(sbuf_t *sp, int item){
     sem_wait(&sp->slots);
     sem_wait(&sp->mutex);
@@ -252,6 +257,9 @@ void sbuf_insert(sbuf_t *sp, int item){
     sem_post(&sp->items);
 }
 
+
+
+/* Fonction pour retirer un élément du buffer */
 int sbuf_remove(sbuf_t *sp){
     int x;
     sem_wait(&sp->items);
@@ -265,27 +273,27 @@ int sbuf_remove(sbuf_t *sp){
     return x;
 }
 
-// Producteur
+/* Fonction producteur */
 void producer(){
   int a;
   while(true){
     a=produce(a);
     sem_wait(&empty);
     pthread_mutex_lock(&mutex);
-    // section critique
+    /* section critique */
     insert_item();
     pthread_mutex_unlock(&mutex);
     sem_post(&full);
   }
 }
 
-// Consommateur
+/* Fonction consommateur */
 void consumer(void){
   int a;
   while(true){
     sem_wait(&full);
     pthread_mutex_lock(&mutex);
-    // section critique
+    /* section critique */
     a=remove(a);
     pthread_mutex_unlock(&mutex);
     sem_post(&empty);
