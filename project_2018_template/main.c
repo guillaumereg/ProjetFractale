@@ -15,17 +15,17 @@ int plusieursFichiers = 0; /* pour savoir il s'il faut un fichier pour chaque fr
 double plusGrandeMoyenne = 0; /* stocke la plus grande moyenne de fractale actuelle */
 struct fractal * fracMax; /* pointeur vers la fractale avec la plus grande moyenne */
 
-struct fractal * tabFractal[4]; /* tableau de fractales non calculées */
-int tableauRempli = 0; /* permet d'indiquer s'il reste de la place dans le tableau */
-
-struct fractal * tabFractalCalculee[4]; /* tableau de fractales calculées */
-int fractaleCalculee = 0; /* permet d'indiquer s'il reste de la place dans le tableau */
-
 pthread_cond_t condStockage = PTHREAD_COND_INITIALIZER; /* Création de la condition */
 pthread_mutex_t mutexLecture = PTHREAD_MUTEX_INITIALIZER; /* Création du mutex */
 
 pthread_cond_t condCalcul = PTHREAD_COND_INITIALIZER; /* Création de la condition */
 pthread_mutex_t mutexCalcul = PTHREAD_MUTEX_INITIALIZER; /* Création du mutex */
+
+sem_t empty_1;
+sem_t full_1;
+
+sem_t empty_2;
+sem_t full_2;
 
 
 void* threadLecteur (void* arg);
@@ -263,4 +263,31 @@ int sbuf_remove(sbuf_t *sp){
     sem_post(&sp->mutex);
     sem_post(&sp->slots);
     return x;
+}
+
+// Producteur
+void producer(){
+  int a;
+  while(true){
+    a=produce(a);
+    sem_wait(&empty);
+    pthread_mutex_lock(&mutex);
+    // section critique
+    insert_item();
+    pthread_mutex_unlock(&mutex);
+    sem_post(&full);
+  }
+}
+
+// Consommateur
+void consumer(void){
+  int a;
+  while(true){
+    sem_wait(&full);
+    pthread_mutex_lock(&mutex);
+    // section critique
+    a=remove(a);
+    pthread_mutex_unlock(&mutex);
+    sem_post(&empty);
+  }
 }
