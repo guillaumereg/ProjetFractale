@@ -115,6 +115,7 @@ int main(int argc, char *argv[]){
 }
 
 
+
 /* Fonction pour lire les fichiers */
 void *threadLecteur(void* arg){
 
@@ -155,11 +156,7 @@ void *threadLecteur(void* arg){
         double b = atoi(tableChaine[4]);
         struct fractal * fracActu = fractal_new(name,width,height,a,b);
 
-
-
-
-
-
+        sbuf_insert(buffer_lecteur_calculateur, fracActu);
 
       }
       fgets(chaine, TAILLE_MAX, fichier);
@@ -175,10 +172,7 @@ void *threadLecteur(void* arg){
 void * threadCalculateur(void* arg){
 
 
-  struct fractal * fracActu ;
-
-/* Ici faut faire le truc pour le buffer */
-
+  struct fractal * fracActu = sbuf_remove(buffer_lecteur_calculateur);
 
   double moyenne;
   int i;
@@ -195,9 +189,7 @@ void * threadCalculateur(void* arg){
     fracMax = fracActu;
   }
 
-
-/* Ici faut faire un truc pour le buffer */
-
+  sbuf_insert(buffer_calculateur_ecrivain, fracActu);
 
   pthread_exit(NULL); /* Fin du thread */
 }
