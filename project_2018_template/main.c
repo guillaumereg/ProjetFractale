@@ -225,7 +225,28 @@ void * threadCalculateur(void* arg){
 
 /* Fonction pour écrire les fractales */
 void * threadEcrivain(void* arg){
-  printf("choper les fractales calculées dans le deuxième tableau et les écrire dans un/des fichiers ");
+
+  struct fractal * fracActu = sbuf_remove(buffer_calculateur_ecrivain);
+  FILE * fichier = NULL;
+
+  if (plusieursFichiers == 0){
+
+    fichier = fopen(fichierSortie, "w");
+
+  }else {
+
+    fichier = fopen(fracActu->name, "w");
+
+  }
+
+  if (fichier == NULL){
+    printf("Erreur dans le fichier de sortie \n");
+    exit(EXIT_FAILURE);
+  }
+  
+  write_bitmap_sdl(fracActu, fichier);
+
+  fclose(fichier);
   pthread_exit(NULL); /* Fin du thread */
 }
 
