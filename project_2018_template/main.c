@@ -102,10 +102,13 @@ int main(int argc, char *argv[]){
       }
   }
 
+  /*Y a t'il un fichier de sortie?*/
+
   fichierSortie = argv[argc-1];
 
+
   /*Lecture des fractales*/
-  while (i<argc-1){
+  while (i<argc-restant){
 
     /*Lecture des fractales sur l'entrée standart*/
     if (strcmp(argv[i], "-")==0){
@@ -122,11 +125,29 @@ int main(int argc, char *argv[]){
     pthread_t monThreadLecteur;
     pthread_t monThreadCalculateur;
     pthread_t monThreadEcrivain;
+    int err;
 
-    pthread_create (&monThreadLecteur, NULL, threadLecteur, (void *)NULL);
-    pthread_create (&monThreadCalculateur, NULL, threadCalculateur, (void *)NULL);
+    for(int i=0; i<NTHREADS; i++){
+
+    }
+
+
+
+    err=pthread_create (&monThreadLecteur,NULL,&threadLecteur,NULL);
+    if(err!=0){
+      error(err,"pthread_create")
+    }
+
+    err=pthread_create (&monThreadCalculateur,NULL,&threadCalculateur,NULL);
+    if(err!=0){
+      error(err,"pthread_create")
+    }
+
     if (plusieursFichiers == 1){
-      pthread_create (&monThreadEcrivain, NULL, threadEcrivain, (void *)NULL);
+      err=pthread_create (&monThreadEcrivain,NULL,&threadEcrivain,NULL);
+      if(err!=0){
+        error(err,"pthread_create")
+      }
     }
 
     /*initialisation des buffer*/
@@ -139,7 +160,7 @@ int main(int argc, char *argv[]){
     write_bitmap_sdl(fracMax, fichierSortie);
   }
   sbuf_clean(buffer_lecteur_calculateur);
-  sbuf_clean(buffer_lecteur_calculateur);
+  sbuf_clean(buffer_calculateur_ecrivain);
 
   return EXIT_SUCCESS;
 }
@@ -189,11 +210,12 @@ void *threadLecteur(void* arg){
 
       sbuf_insert(buffer_lecteur_calculateur, fracActu); /* on insère la nouvelle fractale sur le buffer associé */
 
+
     }
     fgets(chaine, TAILLE_MAX, fichier);
   }
-  fclose(fichier); /* on ferme le fichier */
-
+  
+  fclose(fichier);
   pthread_exit(NULL); /* Fin du thread */
 }
 
@@ -235,6 +257,7 @@ void * threadCalculateur(void* arg){
 
 
 
+
 /* Fonction pour écrire les fractales */
 void * threadEcrivain(void* arg){
 
@@ -260,7 +283,6 @@ void * threadEcrivain(void* arg){
   }
   pthread_exit(NULL); /* Fin du thread */
 }
-
 
 
 /* Fonction pour initialiser un buffer */
