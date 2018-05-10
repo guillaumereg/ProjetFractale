@@ -22,7 +22,6 @@ typedef struct{
 #define TAILLE_MAX 1000 /* Tableau de taille 1000 */
 int SIZE_FRACTALE = sizeof(struct fractal);
 
-char * filename; /* fichier d'entrée qu'on lit actuellement */
 char * fichierSortie; /* fichier de sortie */
 int plusieursFichiers = 0; /* pour savoir il s'il faut un fichier pour chaque fractale */
 
@@ -33,7 +32,7 @@ sbuf_t * buffer_lecteur_calculateur;
 sbuf_t * buffer_calculateur_ecrivain;
 
 /* Prototype fonction pour lire des fichiers*/
-void* threadLecteur ();
+void* threadLecteur (void * arg);
 /* Prototype fonction pour calculer des fractales*/
 void* threadCalculateur ();
 /* Prototype fonction pour écrire dans des fichiers*/
@@ -70,7 +69,7 @@ int main(int argc, char *argv[]){
   /*vérifications nombres arguments si option -d activée en premier*/
   if (strcmp(argv[1], "-d")==0){
     i++;
-    if(argc<3){
+    if(argc<4){
       printf("Trop petit nombre d'arguments\n");
       exit(EXIT_FAILURE);
     }
@@ -78,7 +77,7 @@ int main(int argc, char *argv[]){
     /*vérifications nombres arguments si option -maxthreads activée en plus de l'option -d*/
     if (strcmp(argv[2], "--maxthreads")==0){
       i=i+2;
-      if(argc<5){
+      if(argc<6){
         printf("Trop petit nombre d'arguments\n");
         exit(EXIT_FAILURE);
       }
@@ -94,9 +93,9 @@ int main(int argc, char *argv[]){
       }
       maxThreads = atoi(argv[2]);
       /*vérifications nombres arguments si option -d activée en plus de l'option -maxthreads*/
-      if (strcmp(argv[2], "--maxthreads")==0){
+      if (strcmp(argv[2], "-d")==0){
         i++;
-        if(argc<5){
+        if(argc<6){
           printf("Trop petit nombre d'arguments\n");
           exit(EXIT_FAILURE);
         }
@@ -108,40 +107,12 @@ int main(int argc, char *argv[]){
 
   fichierSortie = argv[argc-1];
 
+  /*initialisation des buffer*/
+  sbuf_init(buffer_lecteur_calculateur,4);
+  sbuf_init(buffer_calculateur_ecrivain,4);
 
   pthread_t thread[maxThreads];
   int err;
-
-  for(j=0;i<maxThreads;j++) {
-    err=pthread_create(&(thread[j]),NULL,&threadLecteur,NULL);
-    if(err!=0){
-      perror("pthread_create");
-    }
-  }
-
-  for(j=0;i<maxThreads;j++) {
-    err=pthread_create(&(thread[j]),NULL,&threadCalculateur,NULL);
-    if(err!=0){
-      perror("pthread_create");
-    }
-  }
-
-  for(j=0;i<maxThreads;j++) {
-    err=pthread_create(&(thread[j]),NULL,&threadEcrivain,NULL);
-    if(err!=0){
-      perror("pthread_create");
-    }
-  }
-
-  for(j=maxThreads-1;j>=0;j--) {
-    err=pthread_join(thread[j],NULL);
-    if(err!=0){
-      perror("pthread_join");
-    }
-  }
-
-
-
   /*Lecture des fractales*/
   while (i<argc-1){
 
@@ -153,18 +124,38 @@ int main(int argc, char *argv[]){
       }
       entree = 1;
     }
-    filename = argv[i];
 
-
-    /*initialisation des buffer*/
-    sbuf_init(buffer_lecteur_calculateur,4);
-    sbuf_init(buffer_calculateur_ecrivain,4);
-
+    err=pthread_create(&(thread[j]),NULL,&threadLecteur,argv[i]);
+    if(err!=0){
+      perror("pthread_create");
+    }
+    i++;
   }
 
-  if(plusieursFichiers == 0){
-    write_bitmap_sdl(fracMax, fichierSortie);
+  for(j=0;i<maxThreads;j++) {
+    err=pthread_create(&(thread[j]),NULL,&threadCalculateur,NULL);
+    if(err!=0){
+      perror("pthread_create");
+    }
   }
+  if(plusieursFichiers == 1){
+      for(j=0;i<maxThreads;j++) {
+        err=pthread_create(&(thread[j]),NULL,&threadEcrivain,NULL);
+        if(err!=0){
+          perror("pthread_create");
+        }
+      }
+  }
+
+  for(j=maxThreads-1;j>=0;j--) {
+    err=pthread_join(thread[j],NULL);
+    if(err!=0){
+      perror("pthread_join");
+    }
+  }
+
+  write_bitmap_sdl(fracMax, fichierSortie);
+
   sbuf_clean(buffer_lecteur_calculateur);
   sbuf_clean(buffer_calculateur_ecrivain);
 
@@ -174,9 +165,12 @@ int main(int argc, char *argv[]){
 
 
 
-/* Fonction pour lire les fichiers */
-void *threadLecteur(){
 
+
+/* Fonction pour lire les fichiers */
+void *threadLecteur(void * arg){
+
+  char * filename = (char *) arg;
   /* si l'option "-" est activée, on lit sur l'entrée standart */
   if(strcmp(filename,"-") == 0){
 
