@@ -102,10 +102,7 @@ int main(int argc, char *argv[]){
       }
   }
 
-  /*Y a t'il un fichier de sortie?*/
-
   fichierSortie = argv[argc-1];
-
 
   /*Lecture des fractales*/
   while (i<argc-1){
@@ -126,11 +123,10 @@ int main(int argc, char *argv[]){
     pthread_t monThreadCalculateur;
     pthread_t monThreadEcrivain;
 
-
-    pthread_create (&monThreadLecteur,NULL,&threadLecteur,NULL);
-    pthread_create (&monThreadCalculateur,NULL,&threadCalculateur,NULL);
+    pthread_create (&monThreadLecteur, NULL, threadLecteur, (void *)NULL);
+    pthread_create (&monThreadCalculateur, NULL, threadCalculateur, (void *)NULL);
     if (plusieursFichiers == 1){
-      pthread_create (&monThreadEcrivain,NULL,&threadEcrivain,NULL);
+      pthread_create (&monThreadEcrivain, NULL, threadEcrivain, (void *)NULL);
     }
 
     /*initialisation des buffer*/
@@ -143,7 +139,7 @@ int main(int argc, char *argv[]){
     write_bitmap_sdl(fracMax, fichierSortie);
   }
   sbuf_clean(buffer_lecteur_calculateur);
-  sbuf_clean(buffer_calculateur_ecrivain);
+  sbuf_clean(buffer_lecteur_calculateur);
 
   return EXIT_SUCCESS;
 }
@@ -237,7 +233,6 @@ void * threadCalculateur(void* arg){
 
 
 
-
 /* Fonction pour écrire les fractales */
 void * threadEcrivain(void* arg){
 
@@ -263,6 +258,7 @@ void * threadEcrivain(void* arg){
   }
   pthread_exit(NULL); /* Fin du thread */
 }
+
 
 
 /* Fonction pour initialiser un buffer */
