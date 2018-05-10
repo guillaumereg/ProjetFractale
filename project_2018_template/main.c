@@ -149,6 +149,7 @@ int main(int argc, char *argv[]){
 /* Fonction pour lire les fichiers */
 void *threadLecteur(void* arg){
 
+  /* si l'option "-" est activée, on lit sur l'entrée standart */
   if(strcmp(filename,"-") == 0){
 
     filename = STDIN_FILENO;
