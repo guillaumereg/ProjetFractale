@@ -108,28 +108,28 @@ int main(int argc, char *argv[]){
   fichierSortie = argv[argc-1];
 
 
-  pthread_t thread[NTHREADS];
+  pthread_t thread[maxThreads];
   int err;
 
-  for(j=0;i<NTHREADS;j++) {
+  for(j=0;i<maxThreads;j++) {
     err=pthread_create(&(thread[j]),NULL,&threadLecteur,NULL);
     if(err!=0)
       error(err,"pthread_create");
     }
 
-  for(j=0;i<NTHREADS;j++) {
+  for(j=0;i<maxThreads;j++) {
     err=pthread_create(&(thread[j]),NULL,&threadCalculateur,NULL);
     if(err!=0)
     error(err,"pthread_create");
   }
 
-  for(j=0;i<NTHREADS;j++) {
+  for(j=0;i<maxThreads;j++) {
     err=pthread_create(&(thread[j]),NULL,&threadEcrivain,NULL);
     if(err!=0)
     error(err,"pthread_create");
   }
 
-  for(j=NTHREADS-1;j>=0;j--) {
+  for(j=maxThreads-1;j>=0;j--) {
   err=pthread_join(thread[j],NULL);
   if(err!=0)
     error(err,"pthread_join");
@@ -138,7 +138,7 @@ int main(int argc, char *argv[]){
 
 
   /*Lecture des fractales*/
-  while (i<argc-restant){
+  while (i<argc-1){
 
     /*Lecture des fractales sur l'entrée standart*/
     if (strcmp(argv[i], "-")==0){
