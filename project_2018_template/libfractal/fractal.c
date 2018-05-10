@@ -14,6 +14,8 @@ struct fractal *fractal_new(const char *name, int width, int height, double a, d
     frac->height = height;
     frac->a = a;
     frac->b = b;
+    int tabValeur [width][height];
+    frac->valeur = tabValeur;
     return frac;
 }
 

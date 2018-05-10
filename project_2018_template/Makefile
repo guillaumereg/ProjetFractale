@@ -1,15 +1,15 @@
-#	CC=gcc
-#	CFLAGS=-W -Wall -ansi
-#	LDFLAGS=
+CC=gcc
+CFLAGS=-W -Wall -ansi
+LDFLAGS=
 
-#	all: main.o fractal.o
-#		gcc -o main.o libfractal/fractal.o libfractal/tools.o -pthread 'sdl-config --cflags --libs'
+fractal: fractal.o main.o
+	$(CC) -std=c99 -o fractal fractal.o main.o $(LDFLAGS)
 
-	# fractal: fractal.o main.o
-	# 	$(CC) -std=c99 -o fractal fractal.o main.o $(LDFLAGS)
+fractal.o:
+	cd libfractal && ${MAKE}
 
-#	fractal.o:
-#		cd libfractal && ${MAKE}
+main.o: main.c fractal.o
+	$(CC) -std=c99 -o -c main.c $(CFLAGS)
 
 #	main.o: main.c fractal.o
 #		$(CC) -std=c99 -o -c main.c $(CFLAGS) -lSDL
