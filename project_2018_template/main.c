@@ -21,7 +21,7 @@ typedef struct{
 
 #define TAILLE_MAX 1000 /* Tableau de taille 1000 */
 int SIZE_FRACTALE = sizeof(struct fractal);
-
+char **nomFractale =NULL;
 char * fichierSortie; /* fichier de sortie */
 int plusieursFichiers = 0; /* pour savoir il s'il faut un fichier pour chaque fractale */
 
@@ -158,6 +158,7 @@ int main(int argc, char *argv[]){
 
   sbuf_clean(buffer_lecteur_calculateur);
   sbuf_clean(buffer_calculateur_ecrivain);
+  free(nomFractale);
 
   return EXIT_SUCCESS;
 }
@@ -212,6 +213,16 @@ void *threadLecteur(void * arg){
         exit(EXIT_FAILURE);
       }
       struct fractal * fracActu = fractal_new(name,width,height,a,b); /* on crée la fractale en fonction des valeurs lues sur la ligne */
+      int x=0;
+      while(*nomFractale[x]!='\0'){
+        if(*nomFractale[x]==*name){
+          printf("Nom de fractale déjà utilisé : %s \n" , name);  /* dans les cas où il n'y pas pas 5 arguments */
+          exit(EXIT_FAILURE);
+        }
+        x++;
+      }
+      *nomFractale = realloc (*nomFractale, sizeof(char)*(x+1));
+      *nomFractale[x]= *name;
 
       sbuf_insert(buffer_lecteur_calculateur, fracActu); /* on insère la nouvelle fractale sur le buffer associé */
 

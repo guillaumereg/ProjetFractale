@@ -23,16 +23,8 @@ clean :
 	rm ./main
 	rm libfractal/*.o
 
-tests : tests/test1 tests/test2 tests/test3
+tests : tests/test1
 	./tests/test1
-	./tests/test2
-	./tests/test3
 
 tests/test1 :
 	gcc -L/usr/local/lib tests/test1.c -o tests/test1 -lcunit
-
-tests/test2 :
-	gcc -L/usr/local/lib tests/test2.c -o tests/test2 -lcunit
-
-tests/test3 :
-	gcc -L/usr/local/lib tests/test3.c -o tests/test3 -lcunit
