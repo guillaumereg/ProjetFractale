@@ -4,11 +4,12 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <errno.h>
 #include "libfractal/fractal.h"
 
 /* Structure du buffer */
 typedef struct{
-    int *buf;          /* Buffer partagé */
+    struct fractal **buf;          /* Buffer partagé */
     int n;             /* Nombre de slots dans le buffer */
     int front;         /* buf[(front+1)%n] est le premier élément */
     int rear;          /* buf[rear%n] est le dernier */
@@ -32,11 +33,11 @@ sbuf_t * buffer_lecteur_calculateur;
 sbuf_t * buffer_calculateur_ecrivain;
 
 /* Prototype fonction pour lire des fichiers*/
-void* threadLecteur (void* arg);
+void* threadLecteur ();
 /* Prototype fonction pour calculer des fractales*/
-void* threadCalculateur (void* arg);
+void* threadCalculateur ();
 /* Prototype fonction pour écrire dans des fichiers*/
-void* threadEcrivain (void* arg);
+void* threadEcrivain ();
 
 
 /* Prototype fonction pour initialiser un buffer */
@@ -113,26 +114,30 @@ int main(int argc, char *argv[]){
 
   for(j=0;i<maxThreads;j++) {
     err=pthread_create(&(thread[j]),NULL,&threadLecteur,NULL);
-    if(err!=0)
-      error(err,"pthread_create");
+    if(err!=0){
+      perror("pthread_create");
     }
+  }
 
   for(j=0;i<maxThreads;j++) {
     err=pthread_create(&(thread[j]),NULL,&threadCalculateur,NULL);
-    if(err!=0)
-    error(err,"pthread_create");
+    if(err!=0){
+      perror("pthread_create");
+    }
   }
 
   for(j=0;i<maxThreads;j++) {
     err=pthread_create(&(thread[j]),NULL,&threadEcrivain,NULL);
-    if(err!=0)
-    error(err,"pthread_create");
+    if(err!=0){
+      perror("pthread_create");
+    }
   }
 
   for(j=maxThreads-1;j>=0;j--) {
-  err=pthread_join(thread[j],NULL);
-  if(err!=0)
-    error(err,"pthread_join");
+    err=pthread_join(thread[j],NULL);
+    if(err!=0){
+      perror("pthread_join");
+    }
   }
 
 
@@ -170,7 +175,7 @@ int main(int argc, char *argv[]){
 
 
 /* Fonction pour lire les fichiers */
-void *threadLecteur(void* arg){
+void *threadLecteur(){
 
   /* si l'option "-" est activée, on lit sur l'entrée standart */
   if(strcmp(filename,"-") == 0){
@@ -224,7 +229,7 @@ void *threadLecteur(void* arg){
 
 
 /* Fonction pour calculer les fractales */
-void * threadCalculateur(void* arg){
+void * threadCalculateur(){
 
   int bool = 0;
 
@@ -261,7 +266,7 @@ void * threadCalculateur(void* arg){
 
 
 /* Fonction pour écrire les fractales */
-void * threadEcrivain(void* arg){
+void * threadEcrivain(){
 
   int bool = 0;
 
@@ -328,7 +333,7 @@ struct fractal * sbuf_remove(sbuf_t *sp){
     sp->front++;
     sp->front=(sp->front)%(sp->n);
     fracActu=*(sp->buf+(sp->front)*SIZE_FRACTALE);
-    *(sp->buf+(sp->front))=0;
+    *(sp->buf+(sp->front))=NULL;
     sem_post(&sp->mutex);
     sem_post(&sp->slots);
     return fracActu;
