@@ -103,11 +103,9 @@ int main(int argc, char *argv[]){
   }
 
   /*Y a t'il un fichier de sortie?*/
-  int restant = 0;
-  if (plusieursFichiers == 0){
-    fichierSortie = argv[argc-1];
-    restant = 1;
-  }
+
+  fichierSortie = argv[argc-1];
+
 
   /*Lecture des fractales*/
   while (i<argc-restant){
@@ -128,10 +126,11 @@ int main(int argc, char *argv[]){
     pthread_t monThreadCalculateur;
     pthread_t monThreadEcrivain;
 
-    pthread_create (&monThreadLecteur, NULL, threadLecteur, (void *)NULL);
-    pthread_create (&monThreadCalculateur, NULL, threadCalculateur, (void *)NULL);
+
+    pthread_create (&monThreadLecteur,NULL,&threadLecteur,NULL);
+    pthread_create (&monThreadCalculateur,NULL,&threadCalculateur,NULL);
     if (plusieursFichiers == 1){
-      pthread_create (&monThreadEcrivain, NULL, threadEcrivain, (void *)NULL);
+      pthread_create (&monThreadEcrivain,NULL,&threadEcrivain,NULL);
     }
 
     /*initialisation des buffer*/
