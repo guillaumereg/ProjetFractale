@@ -143,6 +143,8 @@ int main(int argc, char *argv[]){
   if(plusieursFichiers == 0){
     write_bitmap_sdl(fracMax, fichierSortie);
   }
+  sbuf_clean(buffer_lecteur_calculateur);
+  sbuf_clean(buffer_calculateur_ecrivain);
 
   return EXIT_SUCCESS;
 }
@@ -249,7 +251,7 @@ void * threadEcrivain(void* arg){
       bool = 1;
       pthread_exit(NULL); /* Fin du thread */
     }
-    
+
     char * fichier = NULL;
     fichier = fracActu->name;
 
