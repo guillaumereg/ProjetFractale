@@ -55,7 +55,7 @@ struct fractal * sbuf_remove(sbuf_t *sp);
 int main(int argc, char *argv[]){
 
   /*options de bases */
-  int maxThreads = 1;
+  int maxThreads = 4;
   int entree = 0;
   int i=1;
 
@@ -107,6 +107,35 @@ int main(int argc, char *argv[]){
   fichierSortie = argv[argc-1];
 
 
+  pthread_t thread[NTHREADS];
+  int err;
+
+  for(int i=0;i<NTHREADS;i++) {
+    err=pthread_create(&(thread[i]),NULL,&threadLecteur,NULL);
+    if(err!=0)
+      error(err,"pthread_create");
+    }
+
+  for(int i=0;i<NTHREADS;i++) {
+    err=pthread_create(&(thread[i]),NULL,&threadCalculateur,NULL);
+    if(err!=0)
+    error(err,"pthread_create");
+  }
+
+  for(int i=0;i<NTHREADS;i++) {
+    err=pthread_create(&(thread[i]),NULL,&threadEcrivain,NULL);
+    if(err!=0)
+    error(err,"pthread_create");
+  }
+
+  for(int i=NTHREADS-1;i>=0;i--) {
+  err=pthread_join(thread[i],NULL);
+  if(err!=0)
+    error(err,"pthread_join");
+  }
+
+
+
   /*Lecture des fractales*/
   while (i<argc-1){
 
@@ -120,35 +149,6 @@ int main(int argc, char *argv[]){
     }
     filename = argv[i];
 
-    printf("gérer le fait qu'il y a un nombre inconnu de thread");
-
-    pthread_t monThreadLecteur;
-    pthread_t monThreadCalculateur;
-    pthread_t monThreadEcrivain;
-    int err;
-
-    for(int i=0; i<NTHREADS; i++){
-
-    }
-
-
-
-    err=pthread_create (&monThreadLecteur,NULL,&threadLecteur,NULL);
-    if(err!=0){
-      error(err,"pthread_create");
-    }
-
-    err=pthread_create (&monThreadCalculateur,NULL,&threadCalculateur,NULL);
-    if(err!=0){
-      error(err,"pthread_create");
-    }
-
-    if (plusieursFichiers == 1){
-      err=pthread_create (&monThreadEcrivain,NULL,&threadEcrivain,NULL);
-      if(err!=0){
-        error(err,"pthread_create");
-      }
-    }
 
     /*initialisation des buffer*/
     sbuf_init(buffer_lecteur_calculateur,4);
