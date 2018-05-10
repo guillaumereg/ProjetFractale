@@ -168,54 +168,56 @@ int main(int argc, char *argv[]){
 
 
 
+
 /* Fonction pour lire les fichiers */
 void *threadLecteur(void* arg){
 
   /* si l'option "-" est activée, on lit sur l'entrée standart */
   if(strcmp(filename,"-") == 0){
 
-    /* à coder */
+    filename = STDIN_FILENO;
 
-  } else {
-    FILE * fichier = NULL;
-    fichier = fopen(filename, "r");
-    if (fichier == NULL){
-      printf("Nom de fichier invalide : %s \n" , filename);
-      exit(EXIT_FAILURE);
-    }
-
-    char * chaine = NULL;
-    fgets(chaine, TAILLE_MAX, fichier);
-    while(chaine!=NULL){
-      char *result = NULL;
-      result = strtok(chaine, " ");
-
-      char * tableChaine [5];
-      int i=0;
-      while (result != NULL){
-         strcpy(tableChaine[i], result);
-         i++;
-         result = strtok( NULL, " ");
-      }
-      if (strcmp(tableChaine[0] , "#")!=0){
-        if (i!=5){
-          printf("format de fractale invalide : %s \n" , filename);
-          exit(EXIT_FAILURE);
-        }
-        char * name = tableChaine[0];
-        int width = atoi(tableChaine[1]);
-        int height = atoi(tableChaine[2]);
-        double a = atoi(tableChaine[3]);
-        double b = atoi(tableChaine[4]);
-        struct fractal * fracActu = fractal_new(name,width,height,a,b);
-
-        sbuf_insert(buffer_lecteur_calculateur, fracActu);
-
-      }
-      fgets(chaine, TAILLE_MAX, fichier);
-    }
-    fclose(fichier);
   }
+  FILE * fichier = NULL;
+  fichier = fopen(filename, "r");  /* on ouvre le fichier en mode lecture */
+  if (fichier == NULL){
+    printf("Nom de fichier invalide : %s \n" , filename);
+    exit(EXIT_FAILURE);
+  }
+
+  char * chaine = NULL;
+  fgets(chaine, TAILLE_MAX, fichier);  /* on lit le fichier ligne par ligne */
+  while(chaine!=NULL){   /*tant qu'il y a des lignes dans le fichier */
+    char *result = NULL;
+    result = strtok(chaine, " ");
+
+    char * tableChaine [5];
+    int i=0;
+    while (result != NULL){   /* on fragmente la ligne qu'on lit en fonction des espaces */
+        strcpy(tableChaine[i], result);
+        i++;
+        result = strtok( NULL, " ");
+    }
+    if (strcmp(tableChaine[0] , "#")!=0){
+      if (i!=5){
+        printf("format de fractale invalide : %s \n" , filename);  /* dans les cas où il n'y pas pas 5 arguments */
+        exit(EXIT_FAILURE);
+      }
+      char * name = tableChaine[0];
+      int width = atoi(tableChaine[1]);
+      int height = atoi(tableChaine[2]);
+      double a = atoi(tableChaine[3]);
+      double b = atoi(tableChaine[4]);
+      struct fractal * fracActu = fractal_new(name,width,height,a,b); /* on crée la fractale en fonction des valeurs lues sur la ligne */
+
+      sbuf_insert(buffer_lecteur_calculateur, fracActu); /* on insère la nouvelle fractale sur le buffer associé */
+
+
+    }
+    fgets(chaine, TAILLE_MAX, fichier);
+  }
+
+  fclose(fichier);
   pthread_exit(NULL); /* Fin du thread */
 }
 
@@ -228,7 +230,7 @@ void * threadCalculateur(void* arg){
 
   while (bool == 0){
 
-    struct fractal * fracActu = sbuf_remove(buffer_lecteur_calculateur);
+    struct fractal * fracActu = sbuf_remove(buffer_lecteur_calculateur); /* on sélectionne une fractale depuis le buffer */
     if (fracActu == NULL){
       bool = 1;
       pthread_exit(NULL); /* Fin du thread */
@@ -236,20 +238,21 @@ void * threadCalculateur(void* arg){
 
     double moyenne;
     int i;
-    for(i=0;i<fractal_get_height(fracActu);i++){
+    for(i=0;i<fractal_get_height(fracActu);i++){   /* on calcule la valeur de chaque pixel de la fractale */
       int j;
       for(j=0;j<fractal_get_width(fracActu);j++){
         int val = fractal_compute_value(fracActu, i, j);
         moyenne += val;
       }
     }
-    moyenne = moyenne/(fractal_get_height(fracActu)*fractal_get_width(fracActu));
-    if (moyenne > plusGrandeMoyenne){
-      plusGrandeMoyenne = moyenne;
+    moyenne = moyenne/(fractal_get_height(fracActu)*fractal_get_width(fracActu)); /* calcul de la valeur moyenne de la fractale */
+    if (moyenne > plusGrandeMoyenne){  /* si la moyenne de la fractale atuelle est plus grande que la moyenne max */
+      plusGrandeMoyenne = moyenne; /*on sauvegarde la fractale actuelle comme étant la max */
       fracMax = fracActu;
     }
-
-    sbuf_insert(buffer_calculateur_ecrivain, fracActu);
+    if (plusieursFichiers == 1){
+      sbuf_insert(buffer_calculateur_ecrivain, fracActu); /* on insère la fractale calculée dans le buffer associé */
+    }
   }
   pthread_exit(NULL); /* Fin du thread */
 }
@@ -264,24 +267,25 @@ void * threadEcrivain(void* arg){
 
   while (bool == 0){
 
-    struct fractal * fracActu = sbuf_remove(buffer_calculateur_ecrivain);
+    struct fractal * fracActu = sbuf_remove(buffer_calculateur_ecrivain); /* on sélectionne une fractale depuis le buffer */
     if (fracActu == NULL){
       bool = 1;
       pthread_exit(NULL); /* Fin du thread */
     }
 
     char * fichier = NULL;
-    fichier = fracActu->name;
+    fichier = fracActu->name;   /*le nom du fichier = le nom de la fractale */
 
     if (fichier == NULL){
       printf("Erreur dans le fichier de sortie \n");
       exit(EXIT_FAILURE);
     }
-    write_bitmap_sdl(fracActu, fichier);
+    write_bitmap_sdl(fracActu, fichier); /*on crée un fichier pour la fractale */
 
   }
   pthread_exit(NULL); /* Fin du thread */
 }
+
 
 
 /* Fonction pour initialiser un buffer */
