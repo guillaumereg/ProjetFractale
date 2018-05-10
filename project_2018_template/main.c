@@ -24,6 +24,7 @@ int SIZE_FRACTALE = sizeof(struct fractal);
 char * filename; /* fichier d'entrée qu'on lit actuellement */
 char * fichierSortie; /* fichier de sortie */
 int plusieursFichiers = 0; /* pour savoir il s'il faut un fichier pour chaque fractale */
+char * tabFractale[100]; /* stocker le nom de toutes les fractales pour vérifier qu'aucune n'est identique */
 
 double plusGrandeMoyenne = 0; /* stocke la plus grande moyenne de fractale actuelle */
 struct fractal * fracMax; /* pointeur vers la fractale avec la plus grande moyenne */
@@ -68,7 +69,7 @@ int main(int argc, char *argv[]){
   /*vérifications nombres arguments si option -d activée en premier*/
   if (strcmp(argv[1], "-d")==0){
     i++;
-    if(argc<3){
+    if(argc<4){
       printf("Trop petit nombre d'arguments\n");
       exit(EXIT_FAILURE);
     }
@@ -76,7 +77,7 @@ int main(int argc, char *argv[]){
     /*vérifications nombres arguments si option -maxthreads activée en plus de l'option -d*/
     if (strcmp(argv[2], "--maxthreads")==0){
       i=i+2;
-      if(argc<5){
+      if(argc<6){
         printf("Trop petit nombre d'arguments\n");
         exit(EXIT_FAILURE);
       }
@@ -92,9 +93,9 @@ int main(int argc, char *argv[]){
       }
       maxThreads = atoi(argv[2]);
       /*vérifications nombres arguments si option -d activée en plus de l'option -maxthreads*/
-      if (strcmp(argv[2], "--maxthreads")==0){
+      if (strcmp(argv[2], "-d")==0){
         i++;
-        if(argc<5){
+        if(argc<6){
           printf("Trop petit nombre d'arguments\n");
           exit(EXIT_FAILURE);
         }
@@ -102,12 +103,8 @@ int main(int argc, char *argv[]){
       }
   }
 
-  /*Y a t'il un fichier de sortie?*/
-  int restant = 0;
-  if (plusieursFichiers == 0){
-    fichierSortie = argv[argc-1];
-    restant = 1;
-  }
+  fichierSortie = argv[argc-1];
+
 
   /*Lecture des fractales*/
   while (i<argc-restant){
@@ -181,6 +178,17 @@ void *threadLecteur(void* arg){
         double a = atoi(tableChaine[3]);
         double b = atoi(tableChaine[4]);
         struct fractal * fracActu = fractal_new(name,width,height,a,b);
+
+        int n=0;
+        while(tabFractale[n]!=""){
+          if (tableChaine[0]== tabFractale[n]){
+            pthread_exit(NULL);
+          }
+          n++;
+        }
+        if(tabFractale[n+1]==""){
+          char * name = tabFractale[n];
+        }
 
         sbuf_insert(buffer_lecteur_calculateur, fracActu);
 
