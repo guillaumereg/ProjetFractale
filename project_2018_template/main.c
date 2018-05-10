@@ -7,6 +7,7 @@
 #include <errno.h>
 #include "libfractal/fractal.h"
 
+
 /* Structure du buffer */
 typedef struct{
     struct fractal **buf;          /* Buffer partagé */
