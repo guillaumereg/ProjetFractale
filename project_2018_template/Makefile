@@ -1,23 +1,3 @@
-CC=gcc
-CFLAGS=-W -Wall -ansi
-LDFLAGS=
-
-fractal: fractal.o main.o
-	$(CC) -std=c99 -o fractal fractal.o main.o $(LDFLAGS)
-
-fractal.o:
-	cd libfractal && ${MAKE}
-
-main.o: main.c fractal.o
-	$(CC) -std=c99 -o -c main.c $(CFLAGS)
-
-#	main.o: main.c fractal.o
-#		$(CC) -std=c99 -o -c main.c $(CFLAGS) -lSDL
-
-#	clean:
-#		rm -rf *.o
-
-
 ARGS=-c -Wall -W
 
 edit : main.o libfractal/fractal.o libfractal/tools.o
@@ -41,6 +21,7 @@ lib :
 clean :
 	rm *.o
 	rm ./main
+	rm libfractal/*.o
 
 tests : tests/test1 tests/test2 tests/test3
 	./tests/test1
@@ -55,13 +36,3 @@ tests/test2 :
 
 tests/test3 :
 	gcc -L/usr/local/lib tests/test3.c -o tests/test3 -lcunit
-
-mrProper :
-	rm *.o
-	rm ./main
-	rm libfractal/*.o
-	rm libfractal/libfractal.a
-	rm ./ tests/test1
-
-cleanTests :
-	rm ./ tests/test1
