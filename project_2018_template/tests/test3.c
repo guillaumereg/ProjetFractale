@@ -1,3 +1,3 @@
 #Ceci est un fichier qui doit planter
-frac 100 100 0.1
+fract 100 100 0.1
 #Il manque un chiffre

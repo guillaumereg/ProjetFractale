@@ -42,8 +42,26 @@ clean :
 	rm *.o
 	rm ./main
 
+tests : tests/test1 tests/test2 tests/test3
+	./tests/test1
+	./tests/test2
+	./tests/test3
+
+tests/test1 :
+	gcc -L/usr/local/lib tests/test1.c -o tests/test1 -lcunit
+
+tests/test2 :
+	gcc -L/usr/local/lib tests/test2.c -o tests/test2 -lcunit
+
+tests/test3 :
+	gcc -L/usr/local/lib tests/test3.c -o tests/test3 -lcunit
+
 mrProper :
 	rm *.o
 	rm ./main
 	rm libfractal/*.o
 	rm libfractal/libfractal.a
+	rm ./ tests/test1
+
+cleanTests :
+	rm ./ tests/test1
