@@ -213,6 +213,10 @@ void *threadLecteur(){
       int height = atoi(tableChaine[2]);
       double a = atoi(tableChaine[3]);
       double b = atoi(tableChaine[4]);
+      if(a<-1 || a>1 || b<-1 || b>1){
+        printf("a et/ou b invalide : %s \n" , filename);  /* dans les cas où il n'y pas pas 5 arguments */
+        exit(EXIT_FAILURE);
+      }
       struct fractal * fracActu = fractal_new(name,width,height,a,b); /* on crée la fractale en fonction des valeurs lues sur la ligne */
 
       sbuf_insert(buffer_lecteur_calculateur, fracActu); /* on insère la nouvelle fractale sur le buffer associé */
