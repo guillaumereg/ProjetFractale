@@ -102,10 +102,13 @@ int main(int argc, char *argv[]){
       }
   }
 
+  /*Y a t'il un fichier de sortie?*/
+
   fichierSortie = argv[argc-1];
 
+
   /*Lecture des fractales*/
-  while (i<argc-1){
+  while (i<argc-restant){
 
     /*Lecture des fractales sur l'entrée standart*/
     if (strcmp(argv[i], "-")==0){
@@ -122,11 +125,29 @@ int main(int argc, char *argv[]){
     pthread_t monThreadLecteur;
     pthread_t monThreadCalculateur;
     pthread_t monThreadEcrivain;
+    int err;
 
-    pthread_create (&monThreadLecteur, NULL, threadLecteur, (void *)NULL);
-    pthread_create (&monThreadCalculateur, NULL, threadCalculateur, (void *)NULL);
+    for(int i=0; i<NTHREADS; i++){
+
+    }
+
+
+
+    err=pthread_create (&monThreadLecteur,NULL,&threadLecteur,NULL);
+    if(err!=0){
+      error(err,"pthread_create")
+    }
+
+    err=pthread_create (&monThreadCalculateur,NULL,&threadCalculateur,NULL);
+    if(err!=0){
+      error(err,"pthread_create")
+    }
+
     if (plusieursFichiers == 1){
-      pthread_create (&monThreadEcrivain, NULL, threadEcrivain, (void *)NULL);
+      err=pthread_create (&monThreadEcrivain,NULL,&threadEcrivain,NULL);
+      if(err!=0){
+        error(err,"pthread_create")
+      }
     }
 
     /*initialisation des buffer*/
@@ -139,7 +160,7 @@ int main(int argc, char *argv[]){
     write_bitmap_sdl(fracMax, fichierSortie);
   }
   sbuf_clean(buffer_lecteur_calculateur);
-  sbuf_clean(buffer_lecteur_calculateur);
+  sbuf_clean(buffer_calculateur_ecrivain);
 
   return EXIT_SUCCESS;
 }
@@ -151,48 +172,48 @@ void *threadLecteur(void* arg){
 
   if(strcmp(filename,"-") == 0){
 
-    filename = STDIN_FILENO;
+    /* à coder */
 
-  }
-  FILE * fichier = NULL;
-  fichier = fopen(filename, "r");
-  if (fichier == NULL){
-    printf("Nom de fichier invalide : %s \n" , filename);
-    exit(EXIT_FAILURE);
-  }
-
-  char * chaine = NULL;
-  fgets(chaine, TAILLE_MAX, fichier);
-  while(chaine!=NULL){
-    char *result = NULL;
-    result = strtok(chaine, " ");
-
-    char * tableChaine [5];
-    int i=0;
-    while (result != NULL){
-        strcpy(tableChaine[i], result);
-        i++;
-        result = strtok( NULL, " ");
+  } else {
+    FILE * fichier = NULL;
+    fichier = fopen(filename, "r");
+    if (fichier == NULL){
+      printf("Nom de fichier invalide : %s \n" , filename);
+      exit(EXIT_FAILURE);
     }
-    if (strcmp(tableChaine[0] , "#")!=0){
-      if (i!=5){
-        printf("format de fractale invalide : %s \n" , filename);
-        exit(EXIT_FAILURE);
-      }
-      char * name = tableChaine[0];
-      int width = atoi(tableChaine[1]);
-      int height = atoi(tableChaine[2]);
-      double a = atoi(tableChaine[3]);
-      double b = atoi(tableChaine[4]);
-      struct fractal * fracActu = fractal_new(name,width,height,a,b);
 
-      sbuf_insert(buffer_lecteur_calculateur, fracActu);
-
-    }
+    char * chaine = NULL;
     fgets(chaine, TAILLE_MAX, fichier);
-  }
-  fclose(fichier);
+    while(chaine!=NULL){
+      char *result = NULL;
+      result = strtok(chaine, " ");
 
+      char * tableChaine [5];
+      int i=0;
+      while (result != NULL){
+         strcpy(tableChaine[i], result);
+         i++;
+         result = strtok( NULL, " ");
+      }
+      if (strcmp(tableChaine[0] , "#")!=0){
+        if (i!=5){
+          printf("format de fractale invalide : %s \n" , filename);
+          exit(EXIT_FAILURE);
+        }
+        char * name = tableChaine[0];
+        int width = atoi(tableChaine[1]);
+        int height = atoi(tableChaine[2]);
+        double a = atoi(tableChaine[3]);
+        double b = atoi(tableChaine[4]);
+        struct fractal * fracActu = fractal_new(name,width,height,a,b);
+
+        sbuf_insert(buffer_lecteur_calculateur, fracActu);
+
+      }
+      fgets(chaine, TAILLE_MAX, fichier);
+    }
+    fclose(fichier);
+  }
   pthread_exit(NULL); /* Fin du thread */
 }
 
@@ -233,6 +254,7 @@ void * threadCalculateur(void* arg){
 
 
 
+
 /* Fonction pour écrire les fractales */
 void * threadEcrivain(void* arg){
 
@@ -258,7 +280,6 @@ void * threadEcrivain(void* arg){
   }
   pthread_exit(NULL); /* Fin du thread */
 }
-
 
 
 /* Fonction pour initialiser un buffer */
