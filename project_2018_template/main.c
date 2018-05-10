@@ -58,6 +58,7 @@ int main(int argc, char *argv[]){
   int maxThreads = 4;
   int entree = 0;
   int i=1;
+  int j=0;
 
   /*vérifications nombres arguments de bases*/
   if (argc < 3) {
@@ -110,26 +111,26 @@ int main(int argc, char *argv[]){
   pthread_t thread[NTHREADS];
   int err;
 
-  for(int i=0;i<NTHREADS;i++) {
-    err=pthread_create(&(thread[i]),NULL,&threadLecteur,NULL);
+  for(j=0;i<NTHREADS;j++) {
+    err=pthread_create(&(thread[j]),NULL,&threadLecteur,NULL);
     if(err!=0)
       error(err,"pthread_create");
     }
 
-  for(int i=0;i<NTHREADS;i++) {
-    err=pthread_create(&(thread[i]),NULL,&threadCalculateur,NULL);
+  for(j=0;i<NTHREADS;j++) {
+    err=pthread_create(&(thread[j]),NULL,&threadCalculateur,NULL);
     if(err!=0)
     error(err,"pthread_create");
   }
 
-  for(int i=0;i<NTHREADS;i++) {
-    err=pthread_create(&(thread[i]),NULL,&threadEcrivain,NULL);
+  for(j=0;i<NTHREADS;j++) {
+    err=pthread_create(&(thread[j]),NULL,&threadEcrivain,NULL);
     if(err!=0)
     error(err,"pthread_create");
   }
 
-  for(int i=NTHREADS-1;i>=0;i--) {
-  err=pthread_join(thread[i],NULL);
+  for(j=NTHREADS-1;j>=0;j--) {
+  err=pthread_join(thread[j],NULL);
   if(err!=0)
     error(err,"pthread_join");
   }
