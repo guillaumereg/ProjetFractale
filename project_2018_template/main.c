@@ -108,7 +108,7 @@ int main(int argc, char *argv[]){
 
 
   /*Lecture des fractales*/
-  while (i<argc-restant){
+  while (i<argc-1){
 
     /*Lecture des fractales sur l'entrée standart*/
     if (strcmp(argv[i], "-")==0){
@@ -155,48 +155,48 @@ void *threadLecteur(void* arg){
 
   if(strcmp(filename,"-") == 0){
 
-    /* à coder */
+    filename = STDIN_FILENO;
 
-  } else {
-    FILE * fichier = NULL;
-    fichier = fopen(filename, "r");
-    if (fichier == NULL){
-      printf("Nom de fichier invalide : %s \n" , filename);
-      exit(EXIT_FAILURE);
-    }
-
-    char * chaine = NULL;
-    fgets(chaine, TAILLE_MAX, fichier);
-    while(chaine!=NULL){
-      char *result = NULL;
-      result = strtok(chaine, " ");
-
-      char * tableChaine [5];
-      int i=0;
-      while (result != NULL){
-         strcpy(tableChaine[i], result);
-         i++;
-         result = strtok( NULL, " ");
-      }
-      if (strcmp(tableChaine[0] , "#")!=0){
-        if (i!=5){
-          printf("format de fractale invalide : %s \n" , filename);
-          exit(EXIT_FAILURE);
-        }
-        char * name = tableChaine[0];
-        int width = atoi(tableChaine[1]);
-        int height = atoi(tableChaine[2]);
-        double a = atoi(tableChaine[3]);
-        double b = atoi(tableChaine[4]);
-        struct fractal * fracActu = fractal_new(name,width,height,a,b);
-
-        sbuf_insert(buffer_lecteur_calculateur, fracActu);
-
-      }
-      fgets(chaine, TAILLE_MAX, fichier);
-    }
-    fclose(fichier);
   }
+  FILE * fichier = NULL;
+  fichier = fopen(filename, "r");
+  if (fichier == NULL){
+    printf("Nom de fichier invalide : %s \n" , filename);
+    exit(EXIT_FAILURE);
+  }
+
+  char * chaine = NULL;
+  fgets(chaine, TAILLE_MAX, fichier);
+  while(chaine!=NULL){
+    char *result = NULL;
+    result = strtok(chaine, " ");
+
+    char * tableChaine [5];
+    int i=0;
+    while (result != NULL){
+        strcpy(tableChaine[i], result);
+        i++;
+        result = strtok( NULL, " ");
+    }
+    if (strcmp(tableChaine[0] , "#")!=0){
+      if (i!=5){
+        printf("format de fractale invalide : %s \n" , filename);
+        exit(EXIT_FAILURE);
+      }
+      char * name = tableChaine[0];
+      int width = atoi(tableChaine[1]);
+      int height = atoi(tableChaine[2]);
+      double a = atoi(tableChaine[3]);
+      double b = atoi(tableChaine[4]);
+      struct fractal * fracActu = fractal_new(name,width,height,a,b);
+
+      sbuf_insert(buffer_lecteur_calculateur, fracActu);
+
+    }
+    fgets(chaine, TAILLE_MAX, fichier);
+  }
+  fclose(fichier);
+
   pthread_exit(NULL); /* Fin du thread */
 }
 
