@@ -108,7 +108,7 @@ int main(int argc, char *argv[]){
 
 
   /*Lecture des fractales*/
-  while (i<argc-restant){
+  while (i<argc-1){
 
     /*Lecture des fractales sur l'entrée standart*/
     if (strcmp(argv[i], "-")==0){
@@ -135,18 +135,18 @@ int main(int argc, char *argv[]){
 
     err=pthread_create (&monThreadLecteur,NULL,&threadLecteur,NULL);
     if(err!=0){
-      error(err,"pthread_create")
+      error(err,"pthread_create");
     }
 
     err=pthread_create (&monThreadCalculateur,NULL,&threadCalculateur,NULL);
     if(err!=0){
-      error(err,"pthread_create")
+      error(err,"pthread_create");
     }
 
     if (plusieursFichiers == 1){
       err=pthread_create (&monThreadEcrivain,NULL,&threadEcrivain,NULL);
       if(err!=0){
-        error(err,"pthread_create")
+        error(err,"pthread_create");
       }
     }
 
@@ -214,7 +214,7 @@ void *threadLecteur(void* arg){
     }
     fgets(chaine, TAILLE_MAX, fichier);
   }
-  
+
   fclose(fichier);
   pthread_exit(NULL); /* Fin du thread */
 }
