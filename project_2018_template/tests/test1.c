@@ -1,11 +1,52 @@
-fract1 800 800 -0.8 0.4
-fract2 1920 1080 1.0 -1.0
-fract3 2 2 0 0
-# ceci est un commentaire
-test 654 987 -0.56123 0.12345678
-#ignore moi
-#cette ligne aussi
-fractaleQuiRessembleAUneAutre 800 800 -0.8 0.4
-fract20 190 100 0.9 -0.7
-fract33 222 222 0.1 0.5
-frac 78 631 -1.0 -1.0
+#include "CUnit/CUnit.h"
+#include "CUnit/Basic.h"
+#include <stdio.h>
+
+int init_suite(void) { return 0; }
+int clean_suite(void) { return 0; }
+
+void test_case_sample(void)
+{
+   CU_ASSERT(CU_TRUE);
+   CU_ASSERT_NOT_EQUAL(2, -1);
+   CU_ASSERT_STRING_EQUAL("string #1", "string #1");
+   CU_ASSERT_STRING_NOT_EQUAL("string #1", "string #2");
+
+   CU_ASSERT(CU_FALSE);
+   CU_ASSERT_EQUAL(2, 3);
+   CU_ASSERT_STRING_NOT_EQUAL("string #1", "string #1");
+   CU_ASSERT_STRING_EQUAL("string #1", "string #2");
+}
+
+int main ( void )
+{
+   CU_pSuite pSuite = NULL;
+
+   /* initialize the CUnit test registry */
+   if ( CUE_SUCCESS != CU_initialize_registry() )
+      return CU_get_error();
+
+   /* add a suite to the registry */
+   pSuite = CU_add_suite( "max_test_suite", init_suite, clean_suite );
+   if ( NULL == pSuite ) {
+      CU_cleanup_registry();
+      return CU_get_error();
+   }
+
+   // Run all tests using the basic interface
+   CU_basic_set_mode(CU_BRM_VERBOSE);
+   CU_basic_run_tests();
+   printf("\n");
+   CU_basic_show_failures(CU_get_failure_list());
+   printf("\n\n");
+/*
+   // Run all tests using the automated interface
+   CU_automated_run_tests();
+   CU_list_tests_to_file();
+
+   // Run all tests using the console interface
+   CU_console_run_tests();
+*/
+   /* Clean up registry and return */
+   CU_cleanup_registry();
+   return CU_get_error();
