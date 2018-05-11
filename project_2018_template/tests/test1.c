@@ -1,6 +1,5 @@
 #include "CUnit/CUnit.h"
 #include "CUnit/Basic.h"
-#include "main.h"
 #include <stdio.h>
 
 int init_suite(void) { return 0; }
