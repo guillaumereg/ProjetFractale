@@ -1,0 +1,638 @@
+commit 6ad78385630aad65a3f4d218ace9eb41730529da
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Fri May 11 12:11:55 2018 +0200
+
+    testFractal
+
+ project_2018_template/file1               | 11 +++++++++++
+ project_2018_template/tests/testFractal.c | 16 +++++-----------
+ 2 files changed, 16 insertions(+), 11 deletions(-)
+
+commit ef57949677a427a38cb7cf15e792c222d4db6299
+Merge: 3495f47 3d56934
+Author: reginsterg <you@example.com>
+Date:   Fri May 11 12:09:33 2018 +0200
+
+    modif fractale
+
+commit 3495f4797210fec249c79562941113a80418a085
+Author: reginsterg <you@example.com>
+Date:   Fri May 11 12:06:51 2018 +0200
+
+    modif fractale à test
+
+ project_2018_template/libfractal/fractal.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 3d5693481f59a2b5042bcc70ff09479a082b65b3
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Fri May 11 11:44:08 2018 +0200
+
+    Makefile modifié
+
+ project_2018_template/Makefile      | 5 ++++-
+ project_2018_template/tests/test1.c | 1 -
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+commit fed1c4749f22b1d103a63c5688c40278efbcc812
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Fri May 11 11:42:28 2018 +0200
+
+    Création test1
+
+ project_2018_template/main.c        | 21 ++++--------
+ project_2018_template/tests/test1.c | 64 ++++++++++++++++++++++++++++++-------
+ 2 files changed, 60 insertions(+), 25 deletions(-)
+
+commit 3f37c0071e5b3d5cfd1bcafc90f466a3e14a1d86
+Author: reginsterg <you@example.com>
+Date:   Fri May 11 11:41:03 2018 +0200
+
+    makefile
+
+ project_2018_template/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit aadc3e68f32b4bb8abd9b5f37a36ca54e7ba9b11
+Author: reginsterg <you@example.com>
+Date:   Fri May 11 11:35:21 2018 +0200
+
+    test de fractales
+
+ project_2018_template/tests/testFractal.c | 87 +++++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+
+commit 593673d8e8f53917a7750a622a8e2e1f78b72e40
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Fri May 11 01:28:12 2018 +0200
+
+    Doublon nomFractale
+
+ project_2018_template/Makefile      | 10 +---------
+ project_2018_template/main.c        | 13 ++++++++++++-
+ project_2018_template/tests/test2.c |  7 -------
+ project_2018_template/tests/test3.c |  3 ---
+ 4 files changed, 13 insertions(+), 20 deletions(-)
+
+commit 716f908733698fc208825826ff1e9779af2589fc
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 23:54:30 2018 +0200
+
+    Makefile parfait
+
+ .gitignore                                 |   3 ---
+ project_2018_template/Makefile             |  31 +----------------------------
+ project_2018_template/libfractal/fractal.o | Bin 2760 -> 0 bytes
+ project_2018_template/libfractal/tools.c   |   2 +-
+ project_2018_template/libfractal/tools.o   | Bin 12200 -> 0 bytes
+ project_2018_template/main.o               | Bin 13621 -> 0 bytes
+ 6 files changed, 2 insertions(+), 34 deletions(-)
+
+commit 7f64af90e6fa14b2dffc8dc16bdee01a40daadef
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 23:27:27 2018 +0200
+
+    Revert "Makefile fonctionne"
+    
+    This reverts commit a106ed13ccff96377056cfac38eb14eb003c3fe0.
+
+ project_2018_template/Makefile | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+commit f6e72b2656f6982d9a4b1530abb87b4d9f9e9142
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 23:27:19 2018 +0200
+
+    nothing again
+
+ project_2018_template/main   | Bin 23504 -> 0 bytes
+ project_2018_template/main.o | Bin 9520 -> 13621 bytes
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+
+commit 399118649ac75b2bfe4e6dc2ad52f5998d4a8cfb
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 23:27:06 2018 +0200
+
+    ignore
+
+ .gitignore | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit 75693711ba451621d5d12a1925c9ae5913915dbe
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 23:26:31 2018 +0200
+
+    Nothing
+
+ project_2018_template/libfractal/fractal.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+commit a106ed13ccff96377056cfac38eb14eb003c3fe0
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 23:21:20 2018 +0200
+
+    Makefile fonctionne
+
+ project_2018_template/Makefile |  18 +++++++++---------
+ project_2018_template/main     | Bin 0 -> 23504 bytes
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+commit 068202c773f4681f64125800dff039c26d78090d
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 23:19:50 2018 +0200
+
+    Revert "MAKEFILE !!!!"
+    
+    This reverts commit 9f9443175677c0e515a3db6494b2a7c40a2dbe2e.
+
+ project_2018_template/Makefile                |  18 +++++++++---------
+ project_2018_template/libfractal/fractal.c    |   2 ++
+ project_2018_template/libfractal/libfractal.a | Bin 22106 -> 15378 bytes
+ project_2018_template/libfractal/tools.c      |   2 +-
+ project_2018_template/libfractal/tools.o      | Bin 4597 -> 12200 bytes
+ project_2018_template/main.c                  |   1 -
+ 6 files changed, 12 insertions(+), 11 deletions(-)
+
+commit cbffec0a767453b25c78878fc4baa32fdf8ac896
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 23:15:58 2018 +0200
+
+    Changement qui font foirer le makefile
+
+ project_2018_template/Makefile                 |  18 ++++++++++++++++++
+ project_2018_template/libfractal/fractal.o     | Bin 3301 -> 2760 bytes
+ project_2018_template/main                     | Bin 18720 -> 0 bytes
+ project_2018_template/main.o                   | Bin 13621 -> 9520 bytes
+ project_2018_template/{Test1 => tests/test1.c} |   0
+ project_2018_template/{Test2 => tests/test2.c} |   0
+ project_2018_template/{Test3 => tests/test3.c} |   2 +-
+ 7 files changed, 19 insertions(+), 1 deletion(-)
+
+commit 9f9443175677c0e515a3db6494b2a7c40a2dbe2e
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 20:05:27 2018 +0200
+
+    MAKEFILE !!!!
+
+ project_2018_template/Makefile             |  56 +++++++++++++++++++++++------
+ project_2018_template/libfractal/fractal.c |   2 --
+ project_2018_template/libfractal/fractal.o | Bin 9488 -> 3301 bytes
+ project_2018_template/libfractal/tools.c   |   2 +-
+ project_2018_template/libfractal/tools.o   | Bin 12200 -> 4597 bytes
+ project_2018_template/main                 | Bin 0 -> 18720 bytes
+ project_2018_template/main.c               |   1 +
+ project_2018_template/main.o               | Bin 4152 -> 13621 bytes
+ 8 files changed, 47 insertions(+), 14 deletions(-)
+
+commit f43e13717f11ca5140d67629612711a946a91533
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 19:17:33 2018 +0200
+
+    Thread lecteur et autre modif
+
+ project_2018_template/main.c | 72 ++++++++++++++++++++------------------------
+ 1 file changed, 33 insertions(+), 39 deletions(-)
+
+commit 50352a62687ee0e6dca254c45a42bc4eafabf7d5
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 17:54:53 2018 +0200
+
+    a et b invalide
+
+ project_2018_template/main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 91f5eb9fbb6c372a7de40a04bd697a5c01b0090a
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 17:46:31 2018 +0200
+
+    Correction de tous les warning et error
+
+ project_2018_template/main.c | 39 ++++++++++++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 17 deletions(-)
+
+commit 4cf791ed96ffb89693ca32b93b2e21126280346c
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 17:15:21 2018 +0200
+
+    Petite modif (nthread -> maxthread)
+
+ project_2018_template/main.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+commit a112a040429b609f4c17c886c58cb29001679b3b
+Author: “guillaumereg” <«>
+Date:   Thu May 10 17:13:16 2018 +0200
+
+    commentaires
+
+ project_2018_template/main.c | 94 +++++++++++++++++++++++---------------------
+ 1 file changed, 49 insertions(+), 45 deletions(-)
+
+commit 7217382a082619389dbecdd344ab873220bdec23
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 17:09:44 2018 +0200
+
+    i into j
+
+ project_2018_template/main.c | 111 +++++++++++++++++++++----------------------
+ 1 file changed, 55 insertions(+), 56 deletions(-)
+
+commit 999b35b8b380ccfe7bac0b9505c9a146507e55c4
+Merge: 1e1428e 5a7cc9a
+Author: “guillaumereg” <«>
+Date:   Thu May 10 17:06:10 2018 +0200
+
+    encore
+
+commit 1e1428e1b387472e81ca7a1936040d3c74c969c0
+Author: “guillaumereg” <«>
+Date:   Thu May 10 17:04:46 2018 +0200
+
+    encore
+
+ project_2018_template/main.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit 5a7cc9abbf30ee8a6818ed4362fe11021d723d8e
+Merge: f133a0d 728c4d9
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 17:03:47 2018 +0200
+
+    Merge branch 'branche'
+
+commit 728c4d9403da0c4a5ec58f2a7d26c412e0edff65
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 17:02:55 2018 +0200
+
+    Création thread
+
+ project_2018_template/main.c | 60 ++++++++++++++++++++++----------------------
+ 1 file changed, 30 insertions(+), 30 deletions(-)
+
+commit f133a0deb34701f91a96143aa9b0e129b57d3da9
+Merge: b8a68c8 83c831c
+Author: “guillaumereg” <«>
+Date:   Thu May 10 16:49:16 2018 +0200
+
+    encore
+
+commit b8a68c810d073579980745c5e465705ca78059fc
+Author: “guillaumereg” <«>
+Date:   Thu May 10 16:46:13 2018 +0200
+
+    encore
+
+ project_2018_template/main.c | 37 +++++++++++++++++++------------------
+ 1 file changed, 19 insertions(+), 18 deletions(-)
+
+commit 83c831cb38f2ce7473aa81e4855469931797b6de
+Merge: bcdf0ce a069a55
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 16:36:58 2018 +0200
+
+    Merge branch 'master' of https://github.com/guillaumereg/ProjetFractale
+
+commit bcdf0ce02c2f252423b6762ff0692b747434f7c6
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 16:36:56 2018 +0200
+
+    Petit changement
+
+ project_2018_template/main.c | 103 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 62 insertions(+), 41 deletions(-)
+
+commit a069a5566cfd4b401187dc482edb302e80e55d1b
+Author: “guillaumereg” <«>
+Date:   Thu May 10 16:34:23 2018 +0200
+
+    encore
+
+ project_2018_template/main.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit a83df415865095331dd81413adb9244ca1d14c4f
+Author: “guillaumereg” <«>
+Date:   Thu May 10 16:09:37 2018 +0200
+
+    encore
+
+ project_2018_template/main.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
+
+commit 2fc7e9ea718197234718123dbff3364db35e4ed6
+Author: “guillaumereg” <«>
+Date:   Thu May 10 15:42:51 2018 +0200
+
+    lol 'était simple
+
+ project_2018_template/main.c | 72 ++++++++++++++++++++++----------------------
+ 1 file changed, 36 insertions(+), 36 deletions(-)
+
+commit 9dac4792d736d3bad4af2a4cb38a971ed8c869b0
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 15:38:05 2018 +0200
+
+    petite modif
+
+ project_2018_template/main.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+commit 7c880f13eb72064d4951487064b34672e0664a3f
+Author: reginsterg <you@example.com>
+Date:   Thu May 10 15:26:37 2018 +0200
+
+    je crée des fichiers pour remplir
+
+ project_2018_template/Test1 | 11 +++++++++++
+ project_2018_template/Test2 |  7 +++++++
+ project_2018_template/Test3 |  3 +++
+ 3 files changed, 21 insertions(+)
+
+commit 775e26a1c4929b558d42a6dd62071d5a108b4d6d
+Author: “guillaumereg” <«>
+Date:   Thu May 10 15:14:47 2018 +0200
+
+    2 lignes
+
+ project_2018_template/main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit 1f9139f84c9341c0d089e1888ccb48380407857c
+Author: reginsterg <you@example.com>
+Date:   Thu May 10 14:59:25 2018 +0200
+
+    voila
+
+ project_2018_template/main.c | 53 ++++++++++++++++++--------------------------
+ 1 file changed, 21 insertions(+), 32 deletions(-)
+
+commit 397b726156b0eb6b85b3186f508323f13e07df4f
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Thu May 10 14:40:42 2018 +0200
+
+    Petite modif
+
+ project_2018_template/main.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
+
+commit 9da4f9a543cf2d282c4201b8395a5a742ed109e5
+Author: “guillaumereg” <«>
+Date:   Wed May 9 18:43:09 2018 +0200
+
+    petits rajouts
+
+ project_2018_template/main.c | 71 +++++++++++++++++++++++++++-----------------
+ 1 file changed, 44 insertions(+), 27 deletions(-)
+
+commit dd4c53bd239a1ccbd5e71c0d6b9310e8db194238
+Author: “guillaumereg” <«>
+Date:   Wed May 9 18:21:16 2018 +0200
+
+    corps de la fonction écrivain
+
+ project_2018_template/main.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+commit 58b5d40439ca32fd4b471fe804737bd39ae68845
+Author: “guillaumereg” <«>
+Date:   Wed May 9 16:54:43 2018 +0200
+
+    corps de la fonction écrivain
+
+ project_2018_template/main.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
+
+commit 7e69403343d83841f1f9b5c32688b73fb2e0b369
+Author: “guillaumereg” <«>
+Date:   Wed May 9 15:32:33 2018 +0200
+
+    réduction de warnings
+
+ project_2018_template/main.c | 48 +++++++++++++++++++++++++++-----------------
+ 1 file changed, 30 insertions(+), 18 deletions(-)
+
+commit 198262a576835e10bef439f9d4a9457a8465f12f
+Author: “guillaumereg” <«>
+Date:   Wed May 9 15:13:19 2018 +0200
+
+    ouesh encore
+
+ project_2018_template/main.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
+
+commit f92d658621ce3c3af1cc29b7f1771fa3844ace7b
+Author: “guillaumereg” <«>
+Date:   Wed May 9 14:59:54 2018 +0200
+
+    amelioration du buffer
+
+ project_2018_template/main.c | 38 ++++++++++++++++++++++----------------
+ 1 file changed, 22 insertions(+), 16 deletions(-)
+
+commit 87de1d221c6c14e9497e8c35178a8f08ec6c2973
+Author: “guillaumereg” <«>
+Date:   Wed May 9 12:28:44 2018 +0200
+
+    ouesh
+
+ project_2018_template/main.c | 34 ----------------------------------
+ 1 file changed, 34 deletions(-)
+
+commit f82d005d79fab7ee253901f192d06ecf085661bf
+Author: “guillaumereg” <«>
+Date:   Wed May 9 12:18:42 2018 +0200
+
+    ouesh
+
+ project_2018_template/main.c | 80 ++++++++++++++++++++++++--------------------
+ 1 file changed, 44 insertions(+), 36 deletions(-)
+
+commit 6b2649135635cc9ac5c08db0b74bee9e136b47dd
+Author: reginsterg <you@example.com>
+Date:   Wed May 9 12:04:15 2018 +0200
+
+    quelques rajouts
+
+ project_2018_template/main.c | 39 +++++++++++++++++++++++++++++++++------
+ 1 file changed, 33 insertions(+), 6 deletions(-)
+
+commit 2811fd5937c282101d956cdf6e148cb8ba07a004
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Wed Apr 25 14:11:35 2018 +0200
+
+    sbuf-insert and remove
+
+ project_2018_template/main.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+commit 652498ea2efa82a689b268ddaaa63f996047194c
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Mon Apr 16 14:13:17 2018 +0200
+
+    création semaphore et liste truc bazar
+
+ project_2018_template/main.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+
+commit 61ffa35f46b3c399995bdb99e0786f07e24a0aac
+Author: “guillaumereg” <«>
+Date:   Mon Apr 16 13:48:38 2018 +0200
+
+    mise à jour
+
+ project_2018_template/main.c | 51 +++++++++++++++++++++++++++-----------------
+ 1 file changed, 32 insertions(+), 19 deletions(-)
+
+commit 89d9d5aa02696ef44db7a86e47804d23ff624d32
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Mon Apr 16 13:22:59 2018 +0200
+
+    set-values deleted
+
+ project_2018_template/main.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit dc89d09c74448158015b69ec8bca03bbd6f531ac
+Author: “guillaumereg” <«>
+Date:   Wed Apr 11 17:41:11 2018 +0200
+
+    petite maj
+
+ project_2018_template/main.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+commit 6b7fbbd22a82fe1a3ea1da1c3afcd6d4977efe40
+Author: “guillaumereg” <«>
+Date:   Mon Apr 9 19:40:29 2018 +0200
+
+    j'avance
+
+ project_2018_template/main.c | 35 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 3 deletions(-)
+
+commit 3ab213bfc16079dedd6d1c3038357b1a0f435115
+Author: “guillaumereg” <«>
+Date:   Mon Apr 9 18:59:03 2018 +0200
+
+    debut du principe de thread
+
+ project_2018_template/main.c | 61 +++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 58 insertions(+), 3 deletions(-)
+
+commit be9f401297a55fc11e869d221d7f796c7ac17711
+Author: “guillaumereg” <«>
+Date:   Mon Apr 9 12:55:43 2018 +0200
+
+    correction de pas mal de warning
+
+ project_2018_template/Makefile             |  6 +++---
+ project_2018_template/libfractal/fractal.c |  5 -----
+ project_2018_template/main.c               | 30 +++++++++++++-----------------
+ 3 files changed, 16 insertions(+), 25 deletions(-)
+
+commit e4bd2b2260ff1ac853493d99fa1cbe346fa0dfe8
+Author: “guillaumereg” <«>
+Date:   Mon Apr 9 12:18:58 2018 +0200
+
+    il y a des warnings de partout mais j'aime faire des mises à jours
+
+ project_2018_template/Makefile |  6 +---
+ project_2018_template/main.c   | 80 ++++++++++++++++++++++++------------------
+ 2 files changed, 47 insertions(+), 39 deletions(-)
+
+commit 034875a658bc55fa6d31619de3787288fc74e5df
+Author: “guillaumereg” <«>
+Date:   Sun Apr 8 17:18:36 2018 +0200
+
+    encore des changements, bon faut arranger le makefile
+
+ project_2018_template/Makefile |   7 ++-----
+ project_2018_template/main.c   |  27 ++++++++++++++-------------
+ project_2018_template/main.o   | Bin 0 -> 4152 bytes
+ 3 files changed, 16 insertions(+), 18 deletions(-)
+
+commit 5fa042650a6090479d0aea0104abf79220c5cb62
+Author: “guillaumereg” <«>
+Date:   Sun Apr 8 16:18:03 2018 +0200
+
+     la base avance quoi
+
+ project_2018_template/main.c | 33 +++++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
+
+commit 1e42cff16995dd9c2dc15a996bd93a5324228f47
+Author: guillaumereg <«>
+Date:   Sun Apr 8 15:21:10 2018 +0200
+
+    micro mise à jour, mais c'est pour tester un truc
+
+ project_2018_template/main.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+commit 46218854fe630a43083eda1f6c6e837ba08e64e3
+Author: Reginster Guillaume <«>
+Date:   Sun Apr 8 15:11:15 2018 +0200
+
+    vérification format d'entrée
+
+ project_2018_template/main.c | 64 +++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 61 insertions(+), 3 deletions(-)
+
+commit 5e9a1fd990be88e7b4992150fd608982827aa1fc
+Author: Reginster Guillaume <«>
+Date:   Sun Apr 8 11:08:46 2018 +0200
+
+    ça compile !
+
+ project_2018_template/libfractal/fractal.c    |  10 +++++-----
+ project_2018_template/libfractal/fractal.h    |   2 +-
+ project_2018_template/libfractal/fractal.o    | Bin 0 -> 9488 bytes
+ project_2018_template/libfractal/libfractal.a | Bin 0 -> 22106 bytes
+ project_2018_template/libfractal/tools.o      | Bin 0 -> 12200 bytes
+ 5 files changed, 6 insertions(+), 6 deletions(-)
+
+commit 95b5065c00545ee01365f5f4e63099963918241e
+Author: Reginster Guillaume <«>
+Date:   Sat Apr 7 20:52:40 2018 +0200
+
+    lol ça compile pas mais le make a l'air de marcher au moins
+
+ project_2018_template/Makefile             |  7 +++++--
+ project_2018_template/libfractal/fractal.c | 21 ++++++++++++++-------
+ project_2018_template/libfractal/fractal.h |  2 +-
+ 3 files changed, 20 insertions(+), 10 deletions(-)
+
+commit e5298c120537cc2b1a1e4e620e63268ea8aac56f
+Author: Reginster Guillaume <«>
+Date:   Sat Apr 7 20:05:51 2018 +0200
+
+    début de base qui marche pas mais c'est pour faire joli
+
+ project_2018_template/Makefile             | 20 ++++++++++-
+ project_2018_template/libfractal/fractal.c | 57 +++++++++++++++++++++---------
+ project_2018_template/libfractal/fractal.h | 12 +++++--
+ 3 files changed, 69 insertions(+), 20 deletions(-)
+
+commit 55ff008906a4cb423ae3d20995cf6e31f9ad1cfa
+Author: Reginster Guillaume <«>
+Date:   Sat Apr 7 14:02:47 2018 +0200
+
+    debut projet
+
+ project_2018_template/Makefile             |   1 +
+ project_2018_template/libfractal/Makefile  |  15 ++++
+ project_2018_template/libfractal/fractal.c |  54 ++++++++++++++
+ project_2018_template/libfractal/fractal.h | 112 +++++++++++++++++++++++++++++
+ project_2018_template/libfractal/tools.c   | 103 ++++++++++++++++++++++++++
+ project_2018_template/main.c               |  11 +++
+ 6 files changed, 296 insertions(+)
+
+commit efbe2078655e38056ea82042d4023d342ce56ae1
+Author: guillaumereg <guillaumereg@hotmail.fr>
+Date:   Sat Apr 7 13:59:26 2018 +0200
+
+    Initial commit
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
