@@ -151,7 +151,7 @@ int main(int argc, char *argv[]){
   }
 
   int jfinal;
-  for(jfinal=j+j2+j3 ;jfinal>=0 ;jfinal--) {
+  for(jfinal=j+j2+j3-1 ;jfinal>=0 ;jfinal--) {
     err=pthread_join(thread[jfinal],NULL);     /*join l'ensemble des thread créés */
     if(err!=0){
       perror("pthread_join");
