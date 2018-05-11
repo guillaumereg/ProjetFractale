@@ -14,6 +14,10 @@ struct fractal *fractal_new(const char *name, int width, int height, double a, d
     frac->height = height;
     frac->a = a;
     frac->b = b;
+    frac->valeur = malloc(sizof(int)*width*height);
+    if (frac->valeur == NULL){
+      return NULL;
+    }
     return frac;
 }
 
