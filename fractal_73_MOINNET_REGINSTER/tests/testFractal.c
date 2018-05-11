@@ -2,6 +2,7 @@
 #include "CUnit/Basic.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "../libfractal/fractal.h"
 
 struct fractal * new_frac = NULL;
 char * name = "fractalNuméro1";
@@ -15,7 +16,7 @@ int clean_suite(void) { return 0; }
 
 
 void test_fractale_cree(void) {
-  new_frac = fractal_new(name,width,height,a,b);
+  new_frac = (struct fractal *)fractal_new(name,width,height,a,b);
   CU_ASSERT_PTR_NOT_NULL(new_frac);
 }
 
@@ -28,7 +29,7 @@ void test_get_width(void) {
 }
 
 void test_get_height(void) {
-  CU_ASSERT_EQUAL(fractal_get_height(new_frac), heigth);
+  CU_ASSERT_EQUAL(fractal_get_height(new_frac), height);
 }
 
 void test_get_a(void) {
@@ -78,4 +79,5 @@ int main ( void ){
       CU_cleanup_registry();
       return CU_get_error();
    }
+
  }
