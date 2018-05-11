@@ -1,3 +1,77 @@
+commit 448ebb6b6ae057449fa61c77328b4d944d0e36c7
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Fri May 11 15:36:22 2018 +0200
+
+    Changement final
+
+ fractal_73_MOINNET_REGINSTER/fichier1.txt |  5 -----
+ fractal_73_MOINNET_REGINSTER/main.c       | 17 ++++++++---------
+ 2 files changed, 8 insertions(+), 14 deletions(-)
+
+commit bdae16aed39a7026fab9216cac24afffb0261ffd
+Author: reginsterg <you@example.com>
+Date:   Fri May 11 14:33:23 2018 +0200
+
+    j'ai failli laissé passer un truc moche
+
+ fractal_73_MOINNET_REGINSTER/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 9fec5dbf05ba5008e0149597b40ac7699ee89a80
+Author: reginsterg <you@example.com>
+Date:   Fri May 11 14:30:04 2018 +0200
+
+    plein de commentaires
+
+ fractal_73_MOINNET_REGINSTER/main.c              | 44 +++++++++++-------------
+ fractal_73_MOINNET_REGINSTER/tests/testFractal.c | 14 ++++++--
+ 2 files changed, 31 insertions(+), 27 deletions(-)
+
+commit a858927e899e767ff33769d0763f6b8b82984993
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Fri May 11 14:15:50 2018 +0200
+
+    rapport
+
+ fractal_73_MOINNET_REGINSTER/main.c      |  33 ++++++++++++++++++++-----------
+ fractal_73_MOINNET_REGINSTER/rapport.pdf | Bin 31353 -> 48676 bytes
+ 2 files changed, 21 insertions(+), 12 deletions(-)
+
+commit 5e90a9749ef7c1f03fcff6db097051bea986123d
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Fri May 11 13:07:51 2018 +0200
+
+    quelues modifs
+
+ README.md                                          |   1 -
+ fractal_73_MOINNET_REGINSTER/Makefile              |   9 ++--
+ fractal_73_MOINNET_REGINSTER/fichier1.txt          |   5 ++
+ .../{gitlog.stat. => gitlog.stat}                  |   0
+ .../libfractal/libfractal.a                        | Bin 15378 -> 0 bytes
+ fractal_73_MOINNET_REGINSTER/rapport.pdf           | Bin 0 -> 31353 bytes
+ fractal_73_MOINNET_REGINSTER/tests/test1.c         |  52 ---------------------
+ fractal_73_MOINNET_REGINSTER/tests/testFractal.c   |   6 ++-
+ 8 files changed, 13 insertions(+), 60 deletions(-)
+
+commit 703be662965489d1e6ac2148151baa6c361cc26b
+Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
+Date:   Fri May 11 12:28:58 2018 +0200
+
+    Changement de nom de fichier
+
+ .../Makefile                                       |   0
+ fractal_73_MOINNET_REGINSTER/gitlog.stat.          | 638 +++++++++++++++++++++
+ .../libfractal/Makefile                            |   0
+ .../libfractal/fractal.c                           |   2 +-
+ .../libfractal/fractal.h                           |   0
+ .../libfractal/libfractal.a                        | Bin
+ .../libfractal/tools.c                             |   0
+ .../main.c                                         |   0
+ .../tests/test1.c                                  |   0
+ .../tests/testFractal.c                            |   0
+ project_2018_template/file1                        |  11 -
+ 11 files changed, 639 insertions(+), 12 deletions(-)
+
 commit 6ad78385630aad65a3f4d218ace9eb41730529da
 Author: MoinnetA <adrien.moinnet@student.uclouvain.be>
 Date:   Fri May 11 12:11:55 2018 +0200
