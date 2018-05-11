@@ -61,7 +61,7 @@ int main(int argc, char *argv[]){
   int j=0;
 
   if (argc < 3) { /*vérifications nombres arguments de bases*/
-    printf("Trop petit nombre d'arguments\n");
+    printf("Trop petit nombre d'arguments1\n");
     exit(EXIT_FAILURE);
   }
 
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]){
   if (strcmp(argv[1], "-d")==0){
     i++;
     if(argc<4){
-      printf("Trop petit nombre d'arguments\n");
+      printf("Trop petit nombre d'arguments2\n");
       exit(EXIT_FAILURE);
     }
     plusieursFichiers = 1;
@@ -77,7 +77,7 @@ int main(int argc, char *argv[]){
     if (strcmp(argv[2], "--maxthreads")==0){
       i=i+2;
       if(argc<6){
-        printf("Trop petit nombre d'arguments\n");
+        printf("Trop petit nombre d'arguments3\n");
         exit(EXIT_FAILURE);
       }
       maxThreads = atoi(argv[3]);
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]){
   else if (strcmp(argv[1], "--maxthreads")==0){
       i=i+2;
       if(argc<5){
-        printf("Trop petit nombre d'arguments\n");
+        printf("Trop petit nombre d'arguments4\n");
         exit(EXIT_FAILURE);
       }
       maxThreads = atoi(argv[2]);
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]){
       if (strcmp(argv[2], "-d")==0){
         i++;
         if(argc<6){
-          printf("Trop petit nombre d'arguments\n");
+          printf("Trop petit nombre d'arguments5\n");
           exit(EXIT_FAILURE);
         }
         plusieursFichiers = 1;
@@ -128,26 +128,36 @@ int main(int argc, char *argv[]){
     if(err!=0){
       perror("pthread_create");
     }
+
+    err=pthread_join(thread[j],NULL);
+    if(err!=0){
+      perror("pthread_join");
+    }
     i++;
+    j++;
   }
 
-  for(j=0;i<maxThreads;j++) {
-    err=pthread_create(&(thread[j]),NULL,&threadCalculateur,NULL);
+  int j2;
+  for(j2=0;j2<maxThreads;j2++) {
+    err=pthread_create(&(thread[j2+j]),NULL,&threadCalculateur,NULL);
     if(err!=0){
       perror("pthread_create");
     }
   }
+
+  int j3=0;
   if(plusieursFichiers == 1){
-      for(j=0;i<maxThreads;j++) {
-        err=pthread_create(&(thread[j]),NULL,&threadEcrivain,NULL);
+      for(j3=0;j3<maxThreads;j3++) {
+        err=pthread_create(&(thread[j+j2+j3]),NULL,&threadEcrivain,NULL);
         if(err!=0){
           perror("pthread_create");
         }
       }
   }
 
-  for(j=maxThreads-1;j>=0;j--) {
-    err=pthread_join(thread[j],NULL);
+  int jfinal;
+  for(jfinal=j+j2+j3 ;jfinal>=0 ;jfinal--) {
+    err=pthread_join(thread[jfinal],NULL);
     if(err!=0){
       perror("pthread_join");
     }
@@ -219,7 +229,6 @@ void *threadLecteur(void * arg){
       *nomFractale[x]= *name;                                     /* on stock dans la case réallouée le nom de la fractale actuelle */
 
       sbuf_insert(buffer_lecteur_calculateur, fracActu); /* on insère la nouvelle fractale sur le buffer associé */
-
 
     }
     fgets(chaine, TAILLE_MAX, fichier);
