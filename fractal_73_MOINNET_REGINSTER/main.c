@@ -20,16 +20,16 @@ typedef struct{
 
 
 #define TAILLE_MAX 1000 /* Tableau de taille 1000 */
-int SIZE_FRACTALE = sizeof(struct fractal);
-char **nomFractale =NULL;
+int SIZE_FRACTALE = sizeof(struct fractal); /* La taille d'un objet fractal */
+char **nomFractale =NULL; /*tableau contenant le nom de chaque fractale */
 char * fichierSortie; /* fichier de sortie */
 int plusieursFichiers = 0; /* pour savoir il s'il faut un fichier pour chaque fractale */
 
 double plusGrandeMoyenne = 0; /* stocke la plus grande moyenne de fractale actuelle */
 struct fractal * fracMax; /* pointeur vers la fractale avec la plus grande moyenne */
 
-sbuf_t * buffer_lecteur_calculateur;
-sbuf_t * buffer_calculateur_ecrivain;
+sbuf_t * buffer_lecteur_calculateur;  /*buffer entre threadLecteur et threadCalculateur */
+sbuf_t * buffer_calculateur_ecrivain; /*buffer entre threadCalculateur et threadEcrivain */
 
 /* Prototype fonction pour lire des fichiers*/
 void* threadLecteur (void * arg);
@@ -37,7 +37,6 @@ void* threadLecteur (void * arg);
 void* threadCalculateur ();
 /* Prototype fonction pour écrire dans des fichiers*/
 void* threadEcrivain ();
-
 
 /* Prototype fonction pour initialiser un buffer */
 void sbuf_init(sbuf_t *sp, int n);
@@ -83,6 +82,7 @@ int main(int argc, char *argv[]){
       maxThreads = atoi(argv[3]);
     }
   }
+
   /*vérifications nombres arguments si  option -maxthreads activée en premier*/
   else if (strcmp(argv[1], "--maxthreads")==0){
       i=i+2;
@@ -102,8 +102,7 @@ int main(int argc, char *argv[]){
       }
   }
 
-  /*Y a t'il un fichier de sortie?*/
-
+  /*Nom du fichier de sortie*/
   fichierSortie = argv[argc-1];
 
   /*initialisation des buffer*/
@@ -115,7 +114,7 @@ int main(int argc, char *argv[]){
   /*Lecture des fractales*/
   while (i<argc-1){
 
-    /*Lecture des fractales sur l'entrée standart*/
+    /*Lecture des fractales sur l'entrée standart ?*/
     if (strcmp(argv[i], "-")==0){
       if(entree == 1){
         printf("Plusieurs fois l'argument pour lire les entrées\n");
@@ -123,32 +122,28 @@ int main(int argc, char *argv[]){
       }
       entree = 1;
     }
-
+    /*création des thread lecteur */
     err=pthread_create(&(thread[j]),NULL,&threadLecteur,argv[i]);
     if(err!=0){
       perror("pthread_create");
     }
 
-    err=pthread_join(thread[j],NULL);
-    if(err!=0){
-      perror("pthread_join");
-    }
     i++;
     j++;
   }
 
   int j2;
   for(j2=0;j2<maxThreads;j2++) {
-    err=pthread_create(&(thread[j2+j]),NULL,&threadCalculateur,NULL);
+    err=pthread_create(&(thread[j2+j]),NULL,&threadCalculateur,NULL); /*création des thread calculateur */
     if(err!=0){
       perror("pthread_create");
     }
   }
 
   int j3=0;
-  if(plusieursFichiers == 1){
+  if(plusieursFichiers == 1){ /*si il faut faire un fichier pour chaque fractale */
       for(j3=0;j3<maxThreads;j3++) {
-        err=pthread_create(&(thread[j+j2+j3]),NULL,&threadEcrivain,NULL);
+        err=pthread_create(&(thread[j+j2+j3]),NULL,&threadEcrivain,NULL); /*création des thread écrivain */
         if(err!=0){
           perror("pthread_create");
         }
@@ -157,16 +152,17 @@ int main(int argc, char *argv[]){
 
   int jfinal;
   for(jfinal=j+j2+j3 ;jfinal>=0 ;jfinal--) {
-    err=pthread_join(thread[jfinal],NULL);
+    err=pthread_join(thread[jfinal],NULL);     /*join l'ensemble des thread créés */
     if(err!=0){
       perror("pthread_join");
     }
   }
-
+/*crée le fichier de sortie avec la fractale max*/
   write_bitmap_sdl(fracMax, fichierSortie);
-
+/*libère les buffer*/
   sbuf_clean(buffer_lecteur_calculateur);
   sbuf_clean(buffer_calculateur_ecrivain);
+/*libère le tableau de string */
   free(nomFractale);
 
   return EXIT_SUCCESS;
@@ -179,7 +175,7 @@ void *threadLecteur(void * arg){
   /* si l'option "-" est activée, on lit sur l'entrée standart */
   if(strcmp(filename,"-") == 0){
 
-    filename = STDIN_FILENO;
+    filename = STDIN_FILENO;   /*référence vers l'entrée standard*/
 
   }
   FILE * fichier = NULL;
@@ -198,7 +194,7 @@ void *threadLecteur(void * arg){
     char * tableChaine [5];
     int i=0;
     while (result != NULL){   /* on fragmente la ligne qu'on lit en fonction des espaces */
-        strcpy(tableChaine[i], result);
+        strcpy(tableChaine[i], result);  /*on stocke dans le tableau chaque argument séparés par un espace */
         i++;
         result = strtok( NULL, " ");
     }
@@ -231,10 +227,10 @@ void *threadLecteur(void * arg){
       sbuf_insert(buffer_lecteur_calculateur, fracActu); /* on insère la nouvelle fractale sur le buffer associé */
 
     }
-    fgets(chaine, TAILLE_MAX, fichier);
+    fgets(chaine, TAILLE_MAX, fichier);  /*lecture de la prochaine ligne */
   }
 
-  fclose(fichier);
+  fclose(fichier); /*fermeture du fichier */
   pthread_exit(NULL); /* Fin du thread */
 }
 
@@ -267,7 +263,7 @@ void * threadCalculateur(){
       plusGrandeMoyenne = moyenne; /*on sauvegarde la fractale actuelle comme étant la max */
       fracMax = fracActu;
     }
-    if (plusieursFichiers == 1){
+    if (plusieursFichiers == 1){ /*si on doit créer un fichier pour chaque fractale */
       sbuf_insert(buffer_calculateur_ecrivain, fracActu); /* on insère la fractale calculée dans le buffer associé */
     }
   }
