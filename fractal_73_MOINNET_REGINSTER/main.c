@@ -30,7 +30,6 @@ struct fractal * fracMax; /* pointeur vers la fractale avec la plus grande moyen
 
 sbuf_t * buffer_lecteur_calculateur;  /*buffer entre threadLecteur et threadCalculateur */
 sbuf_t * buffer_calculateur_ecrivain; /*buffer entre threadCalculateur et threadEcrivain */
-
 /* Prototype fonction pour lire des fichiers*/
 void* threadLecteur (void * arg);
 /* Prototype fonction pour calculer des fractales*/
@@ -109,7 +108,8 @@ int main(int argc, char *argv[]){
   sbuf_init(buffer_lecteur_calculateur,4);
   sbuf_init(buffer_calculateur_ecrivain,4);
 
-  pthread_t thread[maxThreads];
+  pthread_t thread[(argc - i - 1 + maxThreads)];
+
   int err;
   /*Lecture des fractales*/
   while (i<argc-1){
@@ -141,14 +141,13 @@ int main(int argc, char *argv[]){
   }
 
   int j3=0;
-  if(plusieursFichiers == 1){ /*si il faut faire un fichier pour chaque fractale */
-      for(j3=0;j3<maxThreads;j3++) {
-        err=pthread_create(&(thread[j+j2+j3]),NULL,&threadEcrivain,NULL); /*création des thread écrivain */
-        if(err!=0){
-          perror("pthread_create");
-        }
+    if(plusieursFichiers == 1){ /*si il faut faire un fichier pour chaque fractale */
+      err=pthread_create(&(thread[j+j2+j3]),NULL,&threadEcrivain,NULL); /*création des thread écrivain */
+      if(err!=0){
+        perror("pthread_create");
       }
-  }
+    }
+
 
   int jfinal;
   for(jfinal=j+j2+j3-1 ;jfinal>=0 ;jfinal--) {
