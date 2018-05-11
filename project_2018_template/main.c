@@ -60,8 +60,7 @@ int main(int argc, char *argv[]){
   int i=1;
   int j=0;
 
-  /*vérifications nombres arguments de bases*/
-  if (argc < 3) {
+  if (argc < 3) { /*vérifications nombres arguments de bases*/
     printf("Trop petit nombre d'arguments\n");
     exit(EXIT_FAILURE);
   }
@@ -163,11 +162,6 @@ int main(int argc, char *argv[]){
   return EXIT_SUCCESS;
 }
 
-
-
-
-
-
 /* Fonction pour lire les fichiers */
 void *threadLecteur(void * arg){
 
@@ -209,20 +203,20 @@ void *threadLecteur(void * arg){
       double a = atoi(tableChaine[3]);
       double b = atoi(tableChaine[4]);
       if(a<-1 || a>1 || b<-1 || b>1){
-        printf("a et/ou b invalide : %s \n" , filename);  /* dans les cas où il n'y pas pas 5 arguments */
+        printf("a et/ou b invalide : %s \n" , filename);  /* dans les cas où a et/ou b sont <-1 ou >1 */
         exit(EXIT_FAILURE);
       }
       struct fractal * fracActu = fractal_new(name,width,height,a,b); /* on crée la fractale en fonction des valeurs lues sur la ligne */
       int x=0;
-      while(*nomFractale[x]!='\0'){
-        if(*nomFractale[x]==*name){
-          printf("Nom de fractale déjà utilisé : %s \n" , name);  /* dans les cas où il n'y pas pas 5 arguments */
+      while(*nomFractale[x]!='\0'){                               /* tant qu'on arrive pas à la fin de la liste */
+        if(*nomFractale[x]==*name){                               /* si le pointeur à l'index x est égal au nom de la fractale actuelle */
+          printf("Nom de fractale déjà utilisé : %s \n" , name);  /* dans le cas où la fractale actuelle a déjà été utilisée. */
           exit(EXIT_FAILURE);
         }
         x++;
       }
-      *nomFractale = realloc (*nomFractale, sizeof(char)*(x+1));
-      *nomFractale[x]= *name;
+      *nomFractale = realloc (*nomFractale, sizeof(char)*(x+1));  /* on réalloue le tableau de pointeur en l'incrémentant d'une place */
+      *nomFractale[x]= *name;                                     /* on stock dans la case réallouée le nom de la fractale actuelle */
 
       sbuf_insert(buffer_lecteur_calculateur, fracActu); /* on insère la nouvelle fractale sur le buffer associé */
 
@@ -299,7 +293,6 @@ void * threadEcrivain(){
   }
   pthread_exit(NULL); /* Fin du thread */
 }
-
 
 
 /* Fonction pour initialiser un buffer */
